@@ -984,6 +984,10 @@
         let currentGardenData = null;
         const API_BASE_URL = 'https://d-ds.tzy18828890329.workers.dev';
         const apiUrl = (path) => `${API_BASE_URL}${path}`;
+        const COZE_WEB_SDK_CONFIG = {
+            projectId: '7664594907054702643',
+            token: ''
+        };
         let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'warm_female';
         const TOTAL_PLOTS = 24;
         const chatMessages = document.getElementById('chatMessages');
