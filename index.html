@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://lf-cdn.coze.cn/obj/unpkg/latest/coze/web-sdk/dist/js-umd/index.min.js"></script>
     <style>
         :root {
             --sky-blue: #38bdf8;
@@ -124,6 +125,10 @@
         .energy-fill { height: 100%; width: 20%; background: linear-gradient(90deg, #4ade80, #38bdf8); border-radius: 999px; transition: width 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
         .chat-container { flex: 1; display: flex; flex-direction: column; background: #fafcfb; }
         .chat-messages { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 22px; }
+        .coze-chat-sdk { display: none; flex: 1; min-height: 0; width: 100%; background: #fff; }
+        .chat-container.sdk-mode .coze-chat-sdk { display: block; }
+        .chat-container.sdk-mode .chat-messages,
+        .chat-container.sdk-mode .chat-input-box { display: none; }
         .message-row { display: flex; gap: 14px; max-width: 86%; }
         .message-row.user { align-self: flex-end; flex-direction: row-reverse; }
         .message-row.assistant { align-self: flex-start; }
@@ -936,6 +941,7 @@
             </div>
 
             <div class="chat-container">
+                <div id="cozeChatSdk" class="coze-chat-sdk" aria-label="龙宝聊天窗口"></div>
                 <div class="chat-messages" id="chatMessages">
                     <div class="message-row assistant">
                             <div class="msg-avatar-box"><img src="./longbao.jpg" alt="龙宝"></div>
@@ -1000,14 +1006,38 @@
         const chatMessages = document.getElementById('chatMessages');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
+        let cozeSdkActive = false;
 
         window.addEventListener('DOMContentLoaded', () => {
             generateSunRays();
             initFarmDragPan();
-            fetchGardenData();
-            fetchVoiceProfiles();
-            messageInput.focus();
+            initCozeChat();
+            if (!cozeSdkActive) {
+                fetchGardenData();
+                fetchVoiceProfiles();
+                messageInput?.focus();
+            }
         });
+
+        function initCozeChat() {
+            const sdkContainer = document.getElementById('cozeChatSdk');
+            const chatContainer = document.querySelector('.chat-container');
+            const token = COZE_API_CONFIG.token.trim();
+            if (!sdkContainer || !chatContainer || !window.cozeWebSDK || !token) return;
+            try {
+                window.cozeWebSDK.init({
+                    container: sdkContainer,
+                    projectId: COZE_API_CONFIG.projectId,
+                    token,
+                    onNetworkError: () => console.warn('扣子 Web SDK 网络连接失败'),
+                    onTokenInvalid: () => console.warn('扣子 Web SDK Token 无效')
+                });
+                chatContainer.classList.add('sdk-mode');
+                cozeSdkActive = true;
+            } catch (error) {
+                console.error('扣子 Web SDK 初始化失败', error);
+            }
+        }
 
         /* ===== 2.5D 全场景摄像机平移拖拽引擎 ===== */
         let isPanning = false;
@@ -1105,6 +1135,10 @@
         function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
 
         function sendQuickMessage(text) {
+            if (cozeSdkActive) {
+                document.getElementById('cozeChatSdk')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
             if (text.includes('儿歌')) messageInput.value = "龙宝，给小朋友唱一首好听的儿歌吧！";
             else if (text.includes('故事')) messageInput.value = "龙宝，给小朋友讲一个好听的故事吧！";
             else messageInput.value = text;
@@ -1538,6 +1572,7 @@
 
         /* ===== 聊天 ===== */
         async function sendMessage() {
+            if (cozeSdkActive) return;
             const message = messageInput.value.trim();
             if (!message) return;
             messageInput.disabled = true; sendBtn.disabled = true;
