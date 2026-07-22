@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>龙宝品格小管家 🦕✨ - 3-6岁幼儿专属 AI 伴学城堡</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sky-blue: #38bdf8;
+            --deep-blue: #0284c7;
+            --sun-yellow: #fbbf24;
+            --coral-orange: #ff7043;
+            --mint-green: #4ade80;
+            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #f0fdf4 100%);
+            --radius-large: 28px;
+            --radius-medium: 20px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Fredoka', 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 16px; color: #1e293b; overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(241,245,249,0.6); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+
+        .bubble-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .bubble { position: absolute; border-radius: 50%; opacity: 0.25; animation: floatUp 14s infinite ease-in-out; }
+        .bubble:nth-child(1) { width: 120px; height: 120px; background: #38bdf8; left: 10%; animation-duration: 12s; }
+        .bubble:nth-child(2) { width: 90px; height: 90px; background: #fbbf24; left: 30%; animation-duration: 16s; animation-delay: 2s; }
+        .bubble:nth-child(3) { width: 150px; height: 150px; background: #4ade80; left: 70%; animation-duration: 18s; animation-delay: 4s; }
+        .bubble:nth-child(4) { width: 80px; height: 80px; background: #ff7043; left: 85%; animation-duration: 11s; animation-delay: 1s; }
+
+        .app-castle {
+            position: relative; z-index: 1; width: 100%; max-width: 1180px; height: 92vh;
+            background: rgba(255,255,255,0.96); backdrop-filter: blur(20px);
+            border-radius: 36px; box-shadow: 0 28px 70px rgba(2,132,199,0.18), 0 0 0 6px #fff;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .header-bar {
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+            padding: 14px 28px; color: white;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 6px 24px rgba(2,132,199,0.3);
+        }
+        .header-brand { display: flex; align-items: center; gap: 16px; }
+        .avatar-frame {
+            position: relative; width: 68px; height: 68px; border-radius: 50%;
+            background: #fff; padding: 3px; box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+            animation: avatarWiggle 3.5s infinite ease-in-out; flex-shrink: 0;
+        }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #e0f2fe; }
+        .avatar-badge {
+            position: absolute; bottom: -2px; right: -2px; background: #fbbf24; color: #78350f;
+            font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 20px; border: 2px solid white;
+        }
+        .brand-titles h1 { font-size: 22px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .brand-titles p {
+            font-size: 13px; opacity: 0.95; background: rgba(255,255,255,0.2);
+            padding: 2px 10px; border-radius: 12px; display: inline-block; margin-top: 2px;
+        }
+        .audio-switch {
+            background: rgba(255,255,255,0.22); border: 2px solid rgba(255,255,255,0.5);
+            padding: 8px 18px; border-radius: 50px; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; backdrop-filter: blur(10px); user-select: none; transition: all 0.25s ease;
+        }
+        .audio-switch:hover { background: rgba(255,255,255,0.35); transform: scale(1.04); }
+        .audio-switch span { font-size: 14px; font-weight: 700; }
+        .audio-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+        .voice-select-wrap { display: flex; align-items: center; gap: 5px; color: white; font-size: 11px; font-weight: 800; }
+        .voice-select { appearance: none; border: 2px solid rgba(255,255,255,0.5); border-radius: 999px; padding: 8px 28px 8px 11px; color: white; background: rgba(255,255,255,0.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 3l3 3 3-3' fill='none' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 10px center; font: inherit; cursor: pointer; outline: none; }
+        .voice-select option { color: #334155; background: white; }
+        .content-body { flex: 1; display: flex; overflow: hidden; }
+        .garden-panel {
+            width: 352px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(236,253,245,0.94) 46%, rgba(224,242,254,0.98) 100%);
+            border-right: 1px solid rgba(148,163,184,0.18); padding: 18px 16px;
+            display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
+            box-shadow: inset -1px 0 0 rgba(255,255,255,0.85);
+        }
+        .panel-card {
+            background: rgba(255,255,255,0.9); border-radius: 24px; padding: 14px;
+            box-shadow: 0 10px 24px rgba(15,23,42,0.07); border: 1.5px solid rgba(191,219,254,0.9);
+            display: flex; flex-direction: column; gap: 10px; backdrop-filter: blur(10px);
+        }
+        .panel-card-title {
+            font-size: 13px; font-weight: 900; color: #0369a1;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px dashed #bae6fd; padding-bottom: 7px; letter-spacing: 0.2px;
+        }
+        .medals-grid-scroll { max-height: 124px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 8px; padding-right: 4px; }
+        .medal-item {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #854d0e;
+            padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 800;
+            display: flex; align-items: center; gap: 4px;
+            box-shadow: 0 6px 14px rgba(250,204,21,0.25), inset 0 2px 4px rgba(255,255,255,0.8);
+            border: 1.5px solid #fbbf24; transition: transform 0.2s;
+        }
+        .medal-item:hover { transform: scale(1.05); }
+        .flowers-list-scroll { max-height: 224px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 4px; }
+        .flower-card-agg {
+            background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+            border: 2px solid #e879f9; padding: 12px; border-radius: 20px;
+            display: flex; flex-direction: column; gap: 8px;
+            cursor: pointer; transition: all 0.2s ease;
+            box-shadow: 0 8px 18px rgba(240,171,252,0.16);
+        }
+        .flower-card-agg:hover { transform: translateY(-2px); border-color: #c026d3; box-shadow: 0 10px 22px rgba(240,171,252,0.28); }
+        .flower-info { display: flex; align-items: center; gap: 10px; }
+        .flower-icon-bub { font-size: 22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .flower-text-block { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .flower-title-txt { font-size: 13px; font-weight: 900; color: #701a75; }
+        .flower-achievement-tag { display: inline-flex; align-self: flex-start; font-size: 10px; font-weight: 800; color: #a21caf; background: rgba(245,158,255,0.16); padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(192,38,211,0.18); }
+        .flower-card-note { font-size: 11px; color: #7c3aed; line-height: 1.45; }
+        .flower-count-tag { align-self: flex-start; font-size: 11px; background: #c026d3; color: white; padding: 3px 10px; border-radius: 999px; font-weight: 800; }
+        .energy-bar-box { background: #eef2ff; height: 14px; border-radius: 999px; overflow: hidden; margin-top: 4px; border: 1.5px solid #c4b5fd; }
+        .energy-fill { height: 100%; width: 20%; background: linear-gradient(90deg, #4ade80, #38bdf8); border-radius: 999px; transition: width 0.6s cubic-bezier(0.175,0.885,0.32,1.275); }
+        .chat-container { flex: 1; display: flex; flex-direction: column; background: #fafcfb; }
+        .chat-messages { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 22px; }
+        .message-row { display: flex; gap: 14px; max-width: 86%; }
+        .message-row.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message-row.assistant { align-self: flex-start; }
+        .msg-avatar-box {
+            width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12); overflow: hidden;
+            background: #fff; border: 2.5px solid #38bdf8;
+        }
+        .msg-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .msg-avatar-box.user-avatar {
+            background: #fbbf24; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; border-color: #f59e0b;
+        }
+        .msg-bubble {
+            padding: 16px 22px; border-radius: var(--radius-large); font-size: 16px;
+            line-height: 1.6; box-shadow: 0 6px 20px rgba(0,0,0,0.04); position: relative;
+        }
+        .message-row.user .msg-bubble {
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+            color: white; border-bottom-right-radius: 6px; font-weight: 600;
+        }
+        .message-row.assistant .msg-bubble {
+            background: #fff; color: #1e293b; border: 2.5px solid #e2e8f0; border-bottom-left-radius: 6px;
+        }
+        .voice-play-bar {
+            margin-top: 12px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #86efac; padding: 8px 16px; border-radius: 50px;
+            display: inline-flex; align-items: center; gap: 10px;
+            cursor: pointer; user-select: none; transition: all 0.2s ease;
+        }
+        .voice-play-bar:hover { transform: scale(1.03); box-shadow: 0 4px 14px rgba(34,197,94,0.3); }
+        .voice-play-btn {
+            background: #22c55e; color: white; border: none; padding: 6px 16px;
+            border-radius: 50px; font-size: 13px; font-weight: 800; cursor: pointer;
+        }
+        .task-interactive-card {
+            margin-top: 14px; background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            border: 2.5px solid #fdba74; border-radius: 20px; padding: 16px;
+            box-shadow: 0 6px 18px rgba(251,146,60,0.2);
+        }
+        .task-card-title { font-size: 14px; font-weight: 800; color: #ea580c; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+        .complete-task-btn {
+            width: 100%; margin-top: 10px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white; border: none; padding: 12px 20px; border-radius: 50px;
+            font-size: 15px; font-weight: 800; cursor: pointer;
+            box-shadow: 0 6px 18px rgba(34,197,94,0.35);
+            transition: all 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .complete-task-btn:hover { transform: scale(1.03); box-shadow: 0 10px 24px rgba(34,197,94,0.45); }
+        .chat-action-chips { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .action-chip-btn {
+            background: #f0f9ff; color: #0284c7; border: 1.5px solid #bae6fd;
+            padding: 6px 14px; border-radius: 50px; font-size: 13px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .action-chip-btn:hover { background: #0284c7; color: white; transform: scale(1.05); }
+        .chat-input-box {
+            padding: 18px 24px; background: #fff; border-top: 3px solid #f1f5f9;
+            display: flex; gap: 12px; align-items: center;
+        }
+        .chat-input-box input {
+            flex: 1; padding: 16px 24px; border: 3px solid #cbd5e1; border-radius: 50px;
+            font-size: 16px; font-weight: 600; outline: none; transition: all 0.3s ease; background: #f8fafc;
+        }
+        .chat-input-box input:focus { border-color: #38bdf8; background: #fff; box-shadow: 0 0 0 5px rgba(56,189,248,0.25); }
+        .send-btn-kid {
+            background: linear-gradient(135deg, #ff7043 0%, #fbbf24 100%); color: white; border: none;
+            padding: 16px 32px; border-radius: 50px; font-size: 17px; font-weight: 800;
+            cursor: pointer; box-shadow: 0 8px 20px rgba(255,112,67,0.35); transition: all 0.25s ease;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .send-btn-kid:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 26px rgba(255,112,67,0.45); }
+        .send-btn-kid:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+        .feature-sidebar {
+            width: 260px; background: linear-gradient(180deg, #fefce8 0%, #fff7ed 100%);
+            border-left: 3px solid #fed7aa; padding: 20px;
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .feature-sidebar h3 { font-size: 15px; font-weight: 800; color: #c2410c; border-bottom: 2px dashed #fdba74; padding-bottom: 8px; }
+        .magic-card {
+            background: #fff; border-radius: var(--radius-medium); padding: 14px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.05); cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+            border: 2.5px solid transparent; display: flex; align-items: center; gap: 12px;
+        }
+        .magic-card:hover { transform: translateY(-4px) scale(1.02); border-color: #fb923c; box-shadow: 0 12px 24px rgba(251,146,60,0.25); }
+        .magic-icon { font-size: 32px; width: 50px; height: 50px; background: #fff7ed; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .magic-text h4 { font-size: 15px; font-weight: 800; color: #9a3412; }
+        .magic-text p { font-size: 12px; color: #ea580c; margin-top: 2px; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.45); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .flower-modal-box {
+            background: #fff; border-radius: 32px; padding: 28px;
+            max-width: 380px; width: 90%; text-align: center;
+            border: 4px solid #38bdf8; box-shadow: 0 20px 50px rgba(2,132,199,0.3);
+            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        .modal-overlay.active .flower-modal-box { transform: scale(1); }
+        .modal-flower-icon { font-size: 64px; margin-bottom: 12px; animation: flowerBloom 2.5s infinite ease-in-out; }
+        .modal-title { font-size: 20px; font-weight: 800; color: #0284c7; margin-bottom: 8px; }
+        .modal-desc { font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 20px; }
+        .modal-close-btn {
+            background: linear-gradient(135deg, #0284c7, #38bdf8); color: white; border: none;
+            padding: 12px 28px; border-radius: 50px; font-size: 15px; font-weight: 800; cursor: pointer;
+        }
+
+        /* ==================== 2.5D 等距农场花园 ==================== */
+        /* ==================== 2.5D 等距农场花园 ==================== */
+        .farm-fullscreen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 2000; opacity: 0; pointer-events: none;
+            transition: opacity 0.5s ease; overflow: hidden;
+            background: linear-gradient(180deg, #38bdf8 0%, #a7f3d0 45%, #4ade80 70%, #22c55e 100%);
+            user-select: none; touch-action: none; cursor: grab;
+        }
+        .farm-fullscreen:active { cursor: grabbing; }
+        .farm-fullscreen.active { opacity: 1; pointer-events: auto; }
+
+        /* 摄像机拖拽画布 — 扩展边界防止拖漏 */
+        .farm-world-canvas {
+            position: absolute; top: -300px; left: -300px; right: -300px; bottom: -300px;
+            width: calc(100% + 600px); height: calc(100% + 600px);
+            will-change: transform; transition: transform 0.05s ease-out;
+        }
+
+        /* 天空 - 超大延伸 */
+        .farm-sky {
+            position: absolute; top: -500px; left: -500px; right: -500px; bottom: -500px;
+            background: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 30%, #bae6fd 45%, #d1fae5 55%, #86efac 75%, #4ade80 100%);
+        }
+
+        /* 太阳 */
+        .farm-sun {
+            position: absolute; top: 340px; right: 540px; width: 100px; height: 100px; z-index: 5;
+            background: radial-gradient(circle, #fef08a 20%, #fde047 50%, #eab308 70%, rgba(234,179,8,0) 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 80px 30px rgba(253,224,71,0.65), 0 0 160px 60px rgba(234,179,8,0.3);
+            animation: sunGlow 4s ease-in-out infinite alternate;
+        }
+        .sun-rays {
+            position: absolute; top: 50%; left: 50%; width: 0; height: 0; z-index: 4;
+            animation: sunSpin 30s linear infinite;
+        }
+        .sun-ray {
+            position: absolute; top: -80px; left: -2.5px; width: 5px; height: 75px;
+            background: linear-gradient(180deg, rgba(253,224,71,0.75), rgba(253,224,71,0));
+            transform-origin: 2.5px 80px; border-radius: 3px;
+        }
+
+        /* 远景连绵山丘 - 位于地平线上方 */
+        .farm-mountain {
+            position: absolute; bottom: 44%; left: -5%; width: 110%; height: 180px; z-index: 2;
+            display: flex; align-items: flex-end;
+        }
+        .mtn { position: absolute; bottom: 0; border-radius: 50% 50% 0 0; }
+        .mtn-1 { left: -8%; width: 48%; height: 180px; background: linear-gradient(180deg, #4ade80 0%, #22c55e 100%); }
+        .mtn-2 { left: 22%; width: 55%; height: 150px; background: linear-gradient(180deg, #86efac 0%, #4ade80 100%); }
+        .mtn-3 { right: -8%; width: 50%; height: 165px; background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); }
+
+        /* 远景农家小院装饰 - 位于围栏后方 */
+        .decor-tree { position: absolute; bottom: 46%; font-size: 50px; z-index: 4; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.18)); }
+        .decor-tree.t1 { left: 5%; font-size: 56px; }
+        .decor-tree.t2 { left: 14%; font-size: 40px; }
+        .decor-tree.t3 { right: 6%; font-size: 58px; }
+        .decor-tree.t4 { right: 15%; font-size: 42px; }
+        .decor-house { position: absolute; bottom: 47%; right: 22%; font-size: 50px; z-index: 4; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2)); }
+        .decor-windmill { position: absolute; bottom: 48%; left: 22%; font-size: 45px; z-index: 4; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2)); }
+
+        /* 木围栏 - 刚好处于 43% 高度 */
+        .farm-fence-row {
+            position: absolute; bottom: 43%; left: 2%; right: 2%; height: 48px;
+            z-index: 6; display: flex; align-items: flex-end; justify-content: space-around;
+        }
+        .fp {
+            width: 14px; min-width: 14px; height: 44px; margin: 0 10px;
+            background: linear-gradient(90deg, #b45309, #92400e, #78350f);
+            border-radius: 3px 3px 0 0; position: relative;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.2);
+        }
+        .fp::before {
+            content: ''; position: absolute; top: -8px; left: -4px;
+            width: 22px; height: 12px; background: #92400e;
+            clip-path: polygon(50% 0, 0 100%, 100% 100%); border-radius: 2px;
+        }
+        .fence-h-bar {
+            position: absolute; left: 0; right: 0; height: 10px;
+            background: linear-gradient(180deg, #d97706, #92400e);
+            border-radius: 5px; box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+        }
+        .fence-bar-top { bottom: 32px; }
+        .fence-bar-bot { bottom: 14px; }
+
+        /* 龙宝角色 */
+        .farm-mascot {
+            position: absolute; bottom: 85px; left: 40px; z-index: 25;
+            display: flex; align-items: flex-end; gap: 14px;
+        }
+        .farm-mascot-img {
+            width: 96px; height: 96px; border-radius: 50%;
+            border: 4px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            object-fit: cover; animation: mascotBounce 3s ease-in-out infinite;
+        }
+        .farm-mascot-speech {
+            background: white; border: 3px solid #38bdf8; color: #0284c7;
+            padding: 10px 18px; border-radius: 20px 20px 20px 4px;
+            font-size: 13px; font-weight: 800; max-width: 230px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        /* 视角拖拽提示 */
+        .farm-drag-hint {
+            position: absolute; top: 68px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.42); color: #fff; border: 1.5px solid rgba(255,255,255,0.45);
+            padding: 4px 18px; border-radius: 50px; font-size: 12px; font-weight: 700;
+            backdrop-filter: blur(8px); z-index: 24; pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); letter-spacing: 0.5px;
+        }
+
+        /* ===== 2.5D 农田正向优雅对齐 ===== */
+        .farm-field-wrapper {
+            position: absolute; bottom: 38vh; left: 50%; transform: translateX(-50%);
+            width: 82%; max-width: 980px; height: 43%;
+            z-index: 12; perspective: 900px;
+            display: flex; justify-content: center; align-items: flex-end;
+        }
+
+        .farm-field {
+            transform: rotateX(54deg);
+            transform-origin: center bottom;
+            transform-style: preserve-3d;
+            width: 100%;
+            background:
+                repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0px, transparent 2px, transparent 24px),
+                repeating-linear-gradient(90deg, rgba(0,0,0,0.04) 0px, transparent 2px, transparent 24px),
+                linear-gradient(135deg, #78350f 0%, #642b09 50%, #451a03 100%);
+            border: 8px solid #92400e;
+            border-radius: 22px;
+            padding: 14px 12px 18px;
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.45),
+                inset 0 4px 14px rgba(255,255,255,0.15),
+                0 8px 0 #3e1a00;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+        }
+
+        /* 单个地块 */
+        .farm-plot {
+            aspect-ratio: 1.22;
+            background:
+                radial-gradient(ellipse at center, rgba(0,0,0,0.12) 0%, transparent 70%),
+                linear-gradient(135deg, #854d0e 0%, #713f12 60%, #532e0d 100%);
+            border: 3px solid #a16207;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 6px 2px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), inset 0 -2px 6px rgba(255,255,255,0.1);
+            transform-style: preserve-3d;
+            overflow: visible;
+        }
+        .farm-plot:hover {
+            border-color: #f59e0b;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 0 24px rgba(245,158,11,0.6);
+        }
+
+        /* 地块上的花 — 反向旋转使其直立 */
+        .plot-plant {
+            transform: rotateX(-48deg);
+            transform-origin: bottom center;
+            display: flex; flex-direction: column; align-items: center;
+            position: relative; z-index: 5;
+            transition: transform 0.3s;
+            margin-bottom: 4px;
+        }
+        .farm-plot:hover .plot-plant {
+            transform: rotateX(-48deg) scale(1.15) translateY(-6px);
+        }
+        .plot-flower-head {
+            font-size: 38px;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+            animation: plantSway 4s ease-in-out infinite;
+        }
+        .plot-stem {
+            width: 5px; height: 16px;
+            background: linear-gradient(180deg, #66bb6a, #388e3c);
+            border-radius: 3px; margin-top: -4px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        .plot-leaves {
+            position: absolute; bottom: 24px; width: 30px;
+        }
+        .plot-leaf-l {
+            position: absolute; left: -6px; top: 0;
+            font-size: 10px; transform: rotate(-30deg);
+        }
+        .plot-leaf-r {
+            position: absolute; right: -6px; top: 4px;
+            font-size: 10px; transform: scaleX(-1) rotate(-30deg);
+        }
+        .plot-soil-mound {
+            width: 65%; height: 8px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.35), transparent);
+            border-radius: 50%;
+            position: absolute; bottom: 6px;
+        }
+        .plot-label {
+            font-size: 11px; font-weight: 800; color: #fff;
+            background: rgba(35, 20, 10, 0.88); padding: 2px 8px;
+            border-radius: 12px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            white-space: nowrap; max-width: 90px; overflow: hidden; text-overflow: ellipsis;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.3);
+            margin-top: 3px;
+            z-index: 6;
+        }
+        .plot-count-badge {
+            position: absolute; top: 6px; right: 6px;
+            transform: translateZ(12px) rotateX(-52deg);
+            background: linear-gradient(135deg, #ef4444, #dc2626); color: white;
+            font-size: 10px; font-weight: 900; padding: 2px 7px;
+            border-radius: 12px; border: 1.5px solid white;
+            box-shadow: 0 4px 10px rgba(239,68,68,0.5);
+            z-index: 10;
+        }
+
+        /* 种植动画 */
+        .planting-anim {
+            animation: plantGrow 0.8s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+        }
+        @keyframes plantGrow {
+            0% { transform: rotateX(-52deg) scale(0) translateY(20px); opacity: 0; }
+            60% { transform: rotateX(-52deg) scale(1.2) translateY(-5px); opacity: 1; }
+            100% { transform: rotateX(-52deg) scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* ===== 丰富互动动画系统 ===== */
+        .watering-can-tool {
+            position: absolute; font-size: 64px; z-index: 35; pointer-events: none;
+            filter: drop-shadow(0 12px 20px rgba(0,0,0,0.35));
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+        }
+        .watering-can-tool.active {
+            opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(-35deg);
+        }
+
+        .water-spray {
+            position: absolute; pointer-events: none; z-index: 15;
+            top: -20px; left: 50%; transform: translateX(-50%) rotateX(-52deg);
+            display: flex; gap: 4px;
+        }
+        .water-drop-particle {
+            font-size: 18px; opacity: 0;
+            animation: pourWater 0.8s ease-in infinite;
+        }
+        @keyframes pourWater {
+            0% { transform: translateY(-40px) scale(0.6); opacity: 1; }
+            100% { transform: translateY(35px) scale(1.2); opacity: 0; }
+        }
+
+        /* 播种与泥土动画 */
+        .seed-drop-particle {
+            position: absolute; top: -100px; left: 50%; transform: translateX(-50%) rotateX(-52deg);
+            font-size: 32px; z-index: 20; pointer-events: none;
+            animation: seedDropAnim 0.7s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+        }
+        @keyframes seedDropAnim {
+            0% { top: -110px; opacity: 0; transform: translateX(-50%) rotateX(-52deg) scale(0.4); }
+            70% { top: 10px; opacity: 1; transform: translateX(-50%) rotateX(-52deg) scale(1.4); }
+            85% { top: -4px; transform: translateX(-50%) rotateX(-52deg) scale(0.9); }
+            100% { top: 4px; opacity: 1; transform: translateX(-50%) rotateX(-52deg) scale(1); }
+        }
+
+        .soil-puff-particle {
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%) rotateX(-52deg);
+            font-size: 24px; pointer-events: none; z-index: 18;
+            animation: soilPuffAnim 0.7s ease-out forwards;
+        }
+        @keyframes soilPuffAnim {
+            0% { transform: translateX(-50%) rotateX(-52deg) scale(0.2); opacity: 1; }
+            100% { transform: translateX(-50%) rotateX(-52deg) scale(2.2) translateY(-20px); opacity: 0; }
+        }
+
+        /* 飘浮加分文字 */
+        .float-score-text {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotateX(-52deg);
+            font-size: 15px; font-weight: 900; color: #ffea00;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 12px #ff9800;
+            pointer-events: none; z-index: 25; white-space: nowrap;
+            animation: scoreFloatUp 1.5s ease-out forwards;
+        }
+        @keyframes scoreFloatUp {
+            0% { transform: translateX(-50%) rotateX(-52deg) translateY(0) scale(0.8); opacity: 1; }
+            50% { transform: translateX(-50%) rotateX(-52deg) translateY(-30px) scale(1.25); opacity: 1; }
+            100% { transform: translateX(-50%) rotateX(-52deg) translateY(-60px) scale(1); opacity: 0; }
+        }
+
+        /* 爱心/光芒上升 */
+        .heart-float-particle {
+            position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%) rotateX(-52deg);
+            font-size: 20px; pointer-events: none; z-index: 20;
+            animation: heartRising 1.3s ease-out forwards;
+        }
+        @keyframes heartRising {
+            0% { transform: translateX(-50%) rotateX(-52deg) translateY(0) scale(0.5); opacity: 1; }
+            100% { transform: translateX(-50%) rotateX(-52deg) translateY(-45px) scale(1.4); opacity: 0; }
+        }
+
+        /* 阳光耀斑光层 */
+        .sunlight-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(255,193,7,0.2) 40%, rgba(255,255,255,0) 70%);
+            pointer-events: none; z-index: 22; opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .sunlight-overlay.active { opacity: 1; }
+
+        /* 顶部导航栏 */
+        .farm-header {
+            position: absolute; top: 0; left: 0; right: 0;
+            padding: 16px 28px; display: flex; justify-content: space-between; align-items: center;
+            z-index: 25; background: linear-gradient(180deg, rgba(0,0,0,0.25), transparent);
+        }
+        .farm-title-bar {
+            display: flex; align-items: center; gap: 14px;
+        }
+        .farm-logo {
+            width: 48px; height: 48px; background: rgba(255,255,255,0.3); border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
+            backdrop-filter: blur(8px); border: 2px solid rgba(255,255,255,0.5);
+        }
+        .farm-title-text h2 {
+            color: white; font-size: 24px; font-weight: 800;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+        .farm-title-text p {
+            color: rgba(255,255,255,0.9); font-size: 12px; font-weight: 600;
+        }
+        .farm-stats {
+            display: flex; gap: 12px; align-items: center;
+        }
+        .farm-stat-pill {
+            background: rgba(255,255,255,0.25); backdrop-filter: blur(8px);
+            padding: 8px 16px; border-radius: 50px; color: white;
+            font-size: 13px; font-weight: 800; border: 2px solid rgba(255,255,255,0.4);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .farm-close-btn {
+            background: rgba(255,255,255,0.3); border: 3px solid white; color: white;
+            padding: 10px 24px; border-radius: 50px;
+            font-size: 14px; font-weight: 800; cursor: pointer;
+            backdrop-filter: blur(10px); transition: all 0.25s;
+        }
+        .farm-close-btn:hover { background: white; color: #1565c0; transform: scale(1.05); }
+
+        /* 底部工具栏 */
+        .farm-toolbar {
+            position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 10px; z-index: 25; flex-wrap: wrap; justify-content: center;
+            padding: 10px 12px; border-radius: 24px; background: rgba(255,255,255,0.56);
+            border: 1.5px solid rgba(255,255,255,0.7); box-shadow: 0 10px 28px rgba(15,23,42,0.16);
+            backdrop-filter: blur(12px);
+        }
+        .farm-tool-btn {
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            color: #5d4037; border: 2px solid rgba(148,163,184,0.55);
+            padding: 10px 18px; border-radius: 999px;
+            font-size: 13px; font-weight: 800; cursor: pointer;
+            box-shadow: 0 6px 16px rgba(15,23,42,0.12);
+            transition: all 0.25s; display: flex; align-items: center; gap: 6px;
+        }
+        .farm-tool-btn:hover { transform: scale(1.06) translateY(-2px); border-color: #ff8f00; box-shadow: 0 10px 24px rgba(0,0,0,0.3); }
+        .farm-tool-btn.primary { background: linear-gradient(135deg, #66bb6a, #43a047); color: white; border-color: #2e7d32; }
+        .farm-tool-btn.primary:hover { border-color: #1b5e20; }
+
+        /* 动画 */
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) scale(0.8); }
+            50% { transform: translateY(50vh) scale(1.1); }
+            100% { transform: translateY(-10vh) scale(0.9); }
+        }
+        @keyframes avatarWiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        @keyframes flowerBloom {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.12) rotate(5deg); }
+        }
+        @keyframes sunGlow {
+            0% { transform: scale(0.95); box-shadow: 0 0 80px 30px rgba(255,235,59,0.4), 0 0 160px 60px rgba(255,235,59,0.15); }
+            100% { transform: scale(1.08); box-shadow: 0 0 100px 40px rgba(255,235,59,0.6), 0 0 200px 80px rgba(255,235,59,0.25); }
+        }
+        @keyframes sunSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes cloudFloat {
+            0% { transform: translateX(-200px); }
+            100% { transform: translateX(calc(100vw + 200px)); }
+        }
+        @keyframes creatureFly {
+            0% { transform: translate(0, 0) scaleX(1); }
+            25% { transform: translate(50px, -25px) scaleX(1); }
+            50% { transform: translate(10px, -40px) scaleX(-1); }
+            75% { transform: translate(-30px, -15px) scaleX(-1); }
+            100% { transform: translate(0, 0) scaleX(1); }
+        }
+        @keyframes mascotBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes plantSway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+        /* 种子仓库弹窗 */
+        .seed-modal-box {
+            background: linear-gradient(180deg, #ffffff 0%, #fffaf0 100%); border-radius: 32px; padding: 24px;
+            max-width: 760px; width: 94%; max-height: 88vh;
+            border: 4px solid #fbbf24; box-shadow: 0 24px 60px rgba(251,191,36,0.35);
+            display: flex; flex-direction: column; gap: 16px;
+            transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+            overflow: hidden;
+        }
+        .modal-overlay.active .seed-modal-box { transform: scale(1); }
+        .seed-modal-header { text-align: left; display: flex; flex-direction: column; gap: 6px; }
+        .seed-modal-title { font-size: 22px; font-weight: 900; color: #b45309; display: flex; align-items: center; gap: 8px; }
+        .seed-modal-subtitle { font-size: 13px; color: #78350f; opacity: 0.9; }
+        .seed-price-note { font-size: 12px; color: #92400e; background: #fffbeb; border: 1px solid #fde68a; padding: 8px 12px; border-radius: 14px; line-height: 1.5; }
+
+        .seed-inventory-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px; overflow-y: auto; max-height: 420px; padding: 6px;
+        }
+        .seed-item-card {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2.5px solid #fde68a; border-radius: 22px; padding: 14px;
+            display: flex; flex-direction: column; gap: 8px; text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06); cursor: pointer;
+            transition: all 0.25s ease; position: relative;
+        }
+        .seed-item-card:hover {
+            transform: translateY(-4px) scale(1.04); border-color: #f59e0b;
+            box-shadow: 0 10px 20px rgba(245,158,11,0.25);
+        }
+        .seed-card-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .seed-card-icon { font-size: 38px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.12)); }
+        .seed-price-badge { font-size: 11px; font-weight: 900; color: #92400e; background: #fff1c2; border: 1px solid #f59e0b; padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
+        .seed-card-name { font-size: 14px; font-weight: 900; color: #78350f; line-height: 1.35; }
+        .seed-card-trait { font-size: 11px; color: #92400e; background: #fef3c7; border: 1px solid #fde68a; padding: 3px 8px; border-radius: 999px; font-weight: 800; display: inline-flex; align-self: flex-start; }
+        .seed-card-achievement { font-size: 12px; color: #6d28d9; font-weight: 800; line-height: 1.45; }
+        .seed-card-desc { font-size: 12px; color: #7c2d12; line-height: 1.55; }
+
+        .seed-modal-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 2px dashed #fde68a; padding-top: 12px; flex-wrap: wrap; }
+        .seed-talk-btn {
+            background: #eff6ff; color: #0284c7; border: 1.5px solid #bae6fd;
+            padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 800; cursor: pointer;
+        }
+        .seed-talk-btn:hover { background: #0284c7; color: white; }
+
+        @media (max-width: 760px) {
+            body { padding: 8px; align-items: flex-start; }
+            .app-castle { width: 100%; max-width: none; height: calc(100vh - 16px); border-radius: 24px; }
+            .header-bar { padding: 10px 12px; gap: 8px; align-items: flex-start; }
+            .header-brand { gap: 9px; min-width: 0; }
+            .avatar-frame { width: 52px; height: 52px; }
+            .brand-titles { min-width: 0; }
+            .brand-titles h1 { font-size: 18px; line-height: 1.15; }
+            .brand-titles p { font-size: 10px; line-height: 1.35; max-width: 130px; }
+            .audio-controls { gap: 4px; max-width: 148px; }
+            .audio-switch { padding: 7px 8px; gap: 4px; }
+            .audio-switch span:last-child { max-width: 58px; font-size: 10px; line-height: 1.2; text-align: center; }
+            .voice-select-wrap { width: 100%; justify-content: flex-end; font-size: 9px; }
+            .voice-select { padding: 5px 22px 5px 8px; font-size: 9px; }
+            .content-body { flex-direction: column; overflow: hidden; }
+            .garden-panel { width: 100%; max-height: 192px; flex-shrink: 0; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 10px; gap: 10px; }
+            .garden-panel .panel-card { min-width: 210px; flex: 0 0 210px; }
+            .garden-panel .panel-card:nth-child(3) { min-width: 260px; flex-basis: 260px; }
+            .medals-grid-scroll { max-height: 76px; }
+            .flowers-list-scroll { max-height: 112px; }
+            .chat-container { min-height: 0; }
+            .chat-messages { padding: 14px 10px; gap: 14px; }
+            .message-row { max-width: 96%; gap: 8px; }
+            .msg-avatar-box { width: 38px; height: 38px; }
+            .msg-bubble { padding: 12px 14px; font-size: 14px; line-height: 1.5; }
+            .chat-input-box { padding: 8px; gap: 8px; }
+            .send-btn-kid { padding: 10px 14px; }
+            .feature-sidebar { display: none; }
+            .farm-header { padding: 12px; align-items: flex-start; }
+            .farm-title-text h2 { font-size: 18px; }
+            .farm-title-text p { display: none; }
+            .farm-stats { gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+            .farm-stat-pill { padding: 6px 8px; font-size: 10px; }
+            .farm-close-btn { padding: 7px 9px; font-size: 11px; }
+            .farm-drag-hint { top: 74px; font-size: 10px; }
+            .farm-toolbar { width: calc(100% - 20px); bottom: 10px; padding: 8px; }
+            .farm-tool-btn { padding: 8px 10px; font-size: 11px; }
+            .farm-field-wrapper { bottom: 30vh; width: 104%; height: 44%; }
+            .farm-field { gap: 6px; padding: 10px 8px 14px; border-width: 6px; border-radius: 18px; }
+            .farm-plot { border-width: 2px; border-radius: 9px; padding: 4px 1px; }
+            .seed-modal-box { padding: 16px; width: 94%; border-radius: 24px; }
+            .seed-modal-title { font-size: 18px; }
+            .seed-inventory-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-height: 62vh; }
+            .seed-item-card { padding: 10px; border-radius: 16px; }
+            .seed-card-icon { font-size: 30px; }
+            .seed-card-name { font-size: 12px; }
+            .seed-card-achievement, .seed-card-desc { font-size: 10px; }
+            .seed-price-badge { font-size: 10px; padding: 3px 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bubble-bg">
+        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    </div>
+
+    <!-- 品格成就弹窗 -->
+    <div class="modal-overlay" id="flowerModal">
+        <div class="flower-modal-box">
+            <div class="modal-flower-icon" id="modalFlowerIcon">🌸</div>
+            <div class="modal-title" id="modalFlowerTitle">品格成就卡片</div>
+            <div class="modal-desc" id="modalFlowerDesc">点击一朵花，就能查看它对应的品格成就。</div>
+            <button class="modal-close-btn" onclick="closeFlowerModal()">太棒啦！✨</button>
+        </div>
+    </div>
+
+    <!-- 种子仓库/背包弹窗 -->
+    <div class="modal-overlay" id="seedInventoryModal" style="z-index: 99999;">
+        <div class="seed-modal-box">
+            <div class="seed-modal-header">
+                <div class="seed-modal-title">🎒 龙宝品格种子仓库 🌸</div>
+                <div class="seed-modal-subtitle">点击空地块后，选择一张种子卡就会自动播种。</div>
+                <div class="seed-price-note">价格说明：每张卡片右上角标注所需品格星星，卡片下方同时展示它对应的品格成就。</div>
+            </div>
+            <div class="seed-inventory-grid" id="seedInventoryGrid">
+                <!-- JS 动态渲染种子库 -->
+            </div>
+            <div class="seed-modal-footer">
+                <button class="seed-talk-btn" onclick="closeSeedInventory(); closeFarm(); sendQuickMessage('龙宝，跟我讲讲怎样解锁更多种子吧！')">💬 找龙宝解锁新种子</button>
+                <button class="modal-close-btn" onclick="closeSeedInventory()">关闭背包</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 2.5D 等距农场花园 ========== -->
+    <div class="farm-fullscreen" id="farmFullscreen">
+        <!-- 摄像机可拖拽平移的全景农场世界画布 -->
+        <div class="farm-world-canvas" id="farmWorldCanvas">
+            <!-- 天空 -->
+            <div class="farm-sky"></div>
+
+            <!-- 太阳 + 光线 -->
+            <div class="farm-sun">
+                <div class="sun-rays" id="sunRays"></div>
+            </div>
+
+            <!-- 立体云朵 -->
+            <div class="farm-cloud fc1"><div class="cloud-body"><div class="cloud-puff"></div><div class="cloud-puff"></div><div class="cloud-puff"></div></div></div>
+            <div class="farm-cloud fc2"><div class="cloud-body"><div class="cloud-puff"></div><div class="cloud-puff"></div><div class="cloud-puff"></div></div></div>
+            <div class="farm-cloud fc3"><div class="cloud-body"><div class="cloud-puff"></div><div class="cloud-puff"></div><div class="cloud-puff"></div></div></div>
+
+            <!-- 小动物 -->
+            <div class="farm-creature cr1">🦋</div>
+            <div class="farm-creature cr2">🐝</div>
+            <div class="farm-creature cr3">🕊️</div>
+            <div class="farm-creature cr4">🦋</div>
+
+            <!-- 远山 -->
+            <div class="farm-mountain">
+                <div class="mtn mtn-1"></div>
+                <div class="mtn mtn-2"></div>
+                <div class="mtn mtn-3"></div>
+            </div>
+
+            <!-- 远景装饰 -->
+            <div class="decor-tree t1">🌳</div>
+            <div class="decor-tree t2">🌲</div>
+            <div class="decor-tree t3">🌳</div>
+            <div class="decor-tree t4">🌲</div>
+            <div class="decor-house">🏠</div>
+            <div class="decor-windmill">🎡</div>
+
+            <!-- 围栏 -->
+            <div class="farm-fence-row">
+                <div class="fence-h-bar fence-bar-top"></div>
+                <div class="fence-h-bar fence-bar-bot"></div>
+                <div class="fp"></div><div class="fp"></div><div class="fp"></div><div class="fp"></div>
+                <div class="fp"></div><div class="fp"></div><div class="fp"></div><div class="fp"></div>
+                <div class="fp"></div><div class="fp"></div><div class="fp"></div><div class="fp"></div>
+                <div class="fp"></div><div class="fp"></div><div class="fp"></div><div class="fp"></div>
+                <div class="fp"></div><div class="fp"></div><div class="fp"></div><div class="fp"></div>
+                <div class="fp"></div><div class="fp"></div><div class="fp"></div><div class="fp"></div>
+            </div>
+
+            <!-- 龙宝 -->
+            <div class="farm-mascot">
+                <img src="./longbao.jpg" alt="龙宝" class="farm-mascot-img">
+                <div class="farm-mascot-speech" id="farmBubble">
+                    欢迎来到龙宝农场！🌾<br>点击空地块选种子，点击花朵看对应成就！
+                </div>
+            </div>
+
+            <!-- 2.5D 田地 -->
+            <div class="farm-field-wrapper" id="farmFieldWrapper">
+                <div class="farm-field" id="farmField">
+                    <!-- JS 动态生成 24 个地块 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 顶栏 (固定 HUD 视角) -->
+        <div class="farm-header">
+            <div class="farm-title-bar">
+                <div class="farm-logo">🏡</div>
+                <div class="farm-title-text">
+                    <h2>龙宝品格农场</h2>
+                    <p>点击空地块直接播种 · 点击花朵查看对应成就</p>
+                </div>
+            </div>
+            <div class="farm-stats">
+                <div class="farm-stat-pill" id="farmSeedCount">🌱 种子: 0</div>
+                <div class="farm-stat-pill" id="farmPlotCount">🌸 已种: 0/24</div>
+                <button class="farm-close-btn" onclick="closeFarm()">✖ 返回城堡</button>
+            </div>
+        </div>
+
+        <!-- 视角拖拽提示 -->
+        <div class="farm-drag-hint">🖐️ 按住画面滑动拖拽平移视角</div>
+
+        <!-- 动画水壶工具 & 阳光层 -->
+        <div class="watering-can-tool" id="wateringCanTool">🫗</div>
+        <div class="sunlight-overlay" id="sunlightOverlay"></div>
+
+        <!-- 工具栏 -->
+        <div class="farm-toolbar">
+            <button class="farm-tool-btn" onclick="waterAllPlots()">💦 浇水滋润</button>
+            <button class="farm-tool-btn" onclick="sunlightAllPlots()">☀️ 阳光普照</button>
+            <button class="farm-tool-btn primary" onclick="closeFarm(); sendQuickMessage('领取今日幸福任务')">🎯 任务赚种子</button>
+        </div>
+    </div>
+
+    <!-- 主城堡 -->
+    <div class="app-castle">
+        <div class="header-bar">
+            <div class="header-brand">
+                <div class="avatar-frame">
+                    <img src="./longbao.jpg" alt="蓝龙龙宝" class="avatar-img">
+                    <div class="avatar-badge">龙宝</div>
+                </div>
+                <div class="brand-titles">
+                    <h1>龙宝品格小管家 🦕</h1>
+                    <p>来自自贡恐龙之乡的温暖伙伴 ✨</p>
+                </div>
+            </div>
+            <div class="audio-controls">
+                <div class="audio-switch" onclick="toggleAutoplay()">
+                    <span id="audioIcon">🔊</span>
+                    <span id="audioStatusText">自动朗读：开启中</span>
+                </div>
+                <label class="voice-select-wrap" for="voiceSelect">
+                    <span>音色</span>
+                    <select class="voice-select" id="voiceSelect" onchange="changeVoice(this.value)" aria-label="选择龙宝音色">
+                        <option value="warm_female">温柔女声</option>
+                        <option value="cute_boy">可爱儿童男声</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="garden-panel">
+                <div class="panel-card" onclick="openFarm()" style="cursor:pointer;">
+                    <div class="panel-card-title">
+                        <span>🌱 品格成长能量</span>
+                        <span id="seedCountTag" style="color:#0284c7;">0 颗种子</span>
+                    </div>
+                    <div class="energy-bar-box"><div class="energy-fill" id="energyFill"></div></div>
+                </div>
+                <div class="panel-card">
+                    <div class="panel-card-title">
+                        <span>🏆 龙宝品格勋章</span>
+                        <span style="font-size:11px; color:#0284c7; cursor:pointer;" onclick="openFarm()">进入农场 ➔</span>
+                    </div>
+                    <div class="medals-grid-scroll" id="medalsContainer">
+                        <span style="font-size:13px; color:#94a3b8; font-style:italic;">和小龙宝聊天，就能解锁勋章哦！</span>
+                    </div>
+                </div>
+                <div class="panel-card" style="flex:1;">
+                    <div class="panel-card-title">
+                        <span>🌸 品格花朵盛开榜</span>
+                        <span style="font-size:11px; color:#c026d3; cursor:pointer;" onclick="openFarm()">进入农场 ➔</span>
+                    </div>
+                    <div class="flowers-list-scroll" id="plantsContainer">
+                        <span style="font-size:13px; color:#94a3b8; font-style:italic;">每朵花都对应一项品格成就，先和龙宝聊聊天吧！</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message-row assistant">
+                            <div class="msg-avatar-box"><img src="./longbao.jpg" alt="龙宝"></div>
+                        <div class="msg-bubble">
+                            幸福种子，品格发芽——龙宝来啦！🦕✨<br>
+                            我是龙宝，一只来自自贡恐龙之乡的小恐龙！今天我们一起种一颗品格种子好不好呀？
+                            <div class="voice-play-bar" onclick="playWelcomeVoice()">
+                                <button id="welcome_btn" class="voice-play-btn">▶ 听龙宝打招呼</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-box">
+                    <input type="text" id="messageInput" placeholder="和龙宝说说话，或者问龙宝讲个故事吧..." onkeypress="handleKeyPress(event)">
+                    <button class="send-btn-kid" id="sendBtn" onclick="sendMessage()"><span>发送</span> 🚀</button>
+                </div>
+            </div>
+
+            <div class="feature-sidebar">
+                <h3>✨ 体验魔法世界</h3>
+                <div class="magic-card" onclick="sendQuickMessage('给我讲一个勇敢的故事')">
+                    <div class="magic-icon">📖</div>
+                    <div class="magic-text"><h4>品格故事屋</h4><p>听小龙宝讲故事</p></div>
+                </div>
+                <div class="magic-card" onclick="openFarm()">
+                    <div class="magic-icon">🏡</div>
+                    <div class="magic-text"><h4>品格农场</h4><p>2.5D 等距种花园</p></div>
+                </div>
+                <div class="magic-card" onclick="sendQuickMessage('领取今日幸福任务')">
+                    <div class="magic-icon">🎯</div>
+                    <div class="magic-text"><h4>幸福小管家</h4><p>领取亲子任务</p></div>
+                </div>
+                <div class="magic-card" onclick="sendQuickMessage('念一首快乐的儿歌')">
+                    <div class="magic-icon">🎵</div>
+                    <div class="magic-text"><h4>快乐儿歌</h4><p>和龙宝一起唱</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ===== 初始化 ===== */
+        let sessionId = localStorage.getItem('longbao_session_id') || 'session_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('longbao_session_id', sessionId);
+        let isAutoplay = true;
+        let currentGardenData = null;
+        let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'warm_female';
+        const TOTAL_PLOTS = 24;
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            generateSunRays();
+            initFarmDragPan();
+            fetchGardenData();
+            fetchVoiceProfiles();
+            messageInput.focus();
+        });
+
+        /* ===== 2.5D 全场景摄像机平移拖拽引擎 ===== */
+        let isPanning = false;
+        let panStartX = 0, panStartY = 0;
+        let currentPanX = 0, currentPanY = 0;
+        let hasMovedFar = false;
+
+        function initFarmDragPan() {
+            const fullscreen = document.getElementById('farmFullscreen');
+            const worldCanvas = document.getElementById('farmWorldCanvas');
+            if (!fullscreen || !worldCanvas) return;
+
+            function startPan(e) {
+                if (e.target.closest('.farm-header') || e.target.closest('.farm-toolbar') || e.target.closest('.modal-overlay')) return;
+
+                isPanning = true;
+                hasMovedFar = false;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                panStartX = clientX - currentPanX;
+                panStartY = clientY - currentPanY;
+            }
+
+            function movePan(e) {
+                if (!isPanning) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                let nextX = clientX - panStartX;
+                let nextY = clientY - panStartY;
+
+                // 全景摄像机平移边界: 平稳平移 180px 范围
+                nextX = Math.max(-180, Math.min(180, nextX));
+                nextY = Math.max(-140, Math.min(140, nextY));
+
+                if (Math.abs(nextX - currentPanX) > 6 || Math.abs(nextY - currentPanY) > 6) {
+                    hasMovedFar = true;
+                }
+
+                currentPanX = nextX;
+                currentPanY = nextY;
+                worldCanvas.style.transform = `translate(${currentPanX}px, ${currentPanY}px)`;
+            }
+
+            function endPan() {
+                isPanning = false;
+            }
+
+            fullscreen.addEventListener('mousedown', startPan);
+            window.addEventListener('mousemove', movePan);
+            window.addEventListener('mouseup', endPan);
+
+            fullscreen.addEventListener('touchstart', startPan, { passive: true });
+            window.addEventListener('touchmove', movePan, { passive: true });
+            window.addEventListener('touchend', endPan);
+        }
+
+        /* 太阳光线 */
+        function generateSunRays() {
+            const container = document.getElementById('sunRays');
+            if (!container) return;
+            container.innerHTML = '';
+            for (let i = 0; i < 12; i++) {
+                const ray = document.createElement('div');
+                ray.className = 'sun-ray';
+                ray.style.transform = `rotate(${i * 30}deg)`;
+                container.appendChild(ray);
+            }
+        }
+
+        function toggleAutoplay() {
+            isAutoplay = !isAutoplay;
+            document.getElementById('audioIcon').innerText = isAutoplay ? '🔊' : '🔇';
+            document.getElementById('audioStatusText').innerText = `自动朗读：${isAutoplay ? '开启中' : '已关闭'}`;
+        }
+        function changeVoice(voiceId) {
+            selectedVoiceId = voiceId || 'warm_female';
+            localStorage.setItem('longbao_voice_id', selectedVoiceId);
+            stopSpeech();
+        }
+        async function fetchVoiceProfiles() {
+            const select = document.getElementById('voiceSelect');
+            if (!select) return;
+            select.value = selectedVoiceId;
+            try {
+                const res = await fetch('/api/voices');
+                if (!res.ok) return;
+                const voices = await res.json();
+                select.innerHTML = voices.map(voice => `<option value="${voice.id}">${voice.label}</option>`).join('');
+                select.value = selectedVoiceId;
+            } catch (e) {
+                console.warn('加载音色列表失败，使用默认音色', e);
+            }
+        }
+        function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+
+        function sendQuickMessage(text) {
+            if (text.includes('儿歌')) messageInput.value = "龙宝，给小朋友唱一首好听的儿歌吧！";
+            else if (text.includes('故事')) messageInput.value = "龙宝，给小朋友讲一个好听的故事吧！";
+            else messageInput.value = text;
+            sendMessage();
+        }
+
+        /* ===== 2.5D 农场 ===== */
+        function openFarm() {
+            renderFarmPlots(currentGardenData);
+            document.getElementById('farmFullscreen').classList.add('active');
+        }
+        function closeFarm() {
+            document.getElementById('farmFullscreen').classList.remove('active');
+        }
+
+        function renderFarmPlots(garden) {
+            const field = document.getElementById('farmField');
+            const seeds = (garden && garden.seeds) ? garden.seeds : [];
+
+            // 按品格归类
+            const groups = {};
+            seeds.forEach(s => {
+                const name = s.flower || s.trait || '🌸 美丽之花';
+                if (!groups[name]) groups[name] = { count: 0 };
+                groups[name].count++;
+            });
+
+            const planted = Object.keys(groups);
+            const plantedCount = seeds.length;
+
+            document.getElementById('farmSeedCount').innerText = `🌱 种子: ${seeds.length}`;
+            document.getElementById('farmPlotCount').innerText = `🌸 已种: ${plantedCount}/${TOTAL_PLOTS}`;
+
+            let html = '';
+            // 先放有花的地块
+            planted.forEach(name => {
+                const profile = getFlowerProfile(name);
+                const count = groups[name].count;
+                html += `
+                    <div class="farm-plot" onclick="clickFarmPlot(this, '${name}')" title="点击查看${profile.achievement}">
+                        ${count > 1 ? `<div class="plot-count-badge">×${count}</div>` : ''}
+                        <div class="plot-plant">
+                            <div class="plot-flower-head">${profile.icon}</div>
+                            <div class="plot-leaves">
+                                <span class="plot-leaf-l">🍃</span>
+                                <span class="plot-leaf-r">🍃</span>
+                            </div>
+                            <div class="plot-stem"></div>
+                            <div class="plot-label">${profile.trait}</div>
+                        </div>
+                        <div class="plot-soil-mound"></div>
+                    </div>`;
+            });
+
+            // 剩余空地块
+            const emptyCount = TOTAL_PLOTS - plantedCount;
+            for (let i = 0; i < emptyCount; i++) {
+                html += `
+                    <div class="farm-plot empty-plot" onclick="openSeedInventory(this)">
+                    </div>`;
+            }
+
+            field.innerHTML = html;
+        }
+
+        /* ===== 种子仓库与挑选系统 ===== */
+        const SEED_INVENTORY_ITEMS = [
+            { id: 'honest', name: '🌻 阳光向日葵种子', trait: '诚实品格', flower: '🌻 阳光向日葵', icon: '🌻', desc: '诚实真诚的小朋友最喜欢的向日葵！' },
+            { id: 'brave', name: '🌹 勇敢小玫瑰种子', trait: '勇敢品格', flower: '🌹 勇敢小玫瑰', icon: '🌹', desc: '不怕困难、勇敢尝试开出的灿烂玫瑰！' },
+            { id: 'share', name: '🌷 快乐郁金香种子', trait: '分享品格', flower: '🌷 快乐郁金香', icon: '🌷', desc: '乐于和小伙伴分享玩具开出的郁金香！' },
+            { id: 'kind', name: '🌸 温暖粉樱花种子', trait: '善良品格', flower: '🌸 温暖粉樱花', icon: '🌸', desc: '温暖有爱心、善待他人开出的浪漫粉樱！' },
+            { id: 'discipline', name: '💐 勤劳康乃馨种子', trait: '自律品格', flower: '💐 勤劳康乃馨', icon: '💐', desc: '玩完玩具自己收拾的好孩子康乃馨！' },
+            { id: 'gratitude', name: '🌺 甜美木槿花种子', trait: '感恩品格', flower: '🌺 甜美木槿花', icon: '🌺', desc: '常对爸爸妈妈说谢谢的懂事木槿花！' },
+            { id: 'polite', name: '🪻 优雅薰衣草种子', trait: '礼貌品格', flower: '🪻 优雅薰衣草', icon: '🪻', desc: '彬彬有礼、文明用语开出的紫罗兰薰衣草！' },
+            { id: 'hardwork', name: '🌾 幸运黄金麦种子', trait: '勤劳品格', flower: '🌾 幸运黄金麦', icon: '🌾', desc: '主动做小家务帮大人分担开出的金黄麦穗！' },
+            { id: 'cooperate', name: '🍀 幸运四叶草种子', trait: '合作品格', flower: '🍀 幸运四叶草', icon: '🍀', desc: '和小伙伴齐心协力搭积木开出的幸运四叶草！' },
+            { id: 'love', name: '💖 充满爱心花种子', trait: '关爱品格', flower: '💖 充满爱心花', icon: '💖', desc: '懂得关心身边人、拥抱家人的温暖爱心花！' }
+        ];
+
+        const FLOWER_PROFILE_DETAILS = {
+            '🌻 阳光向日葵': { price: 8, achievement: '诚实成就：勇敢说真话', detail: '愿意把真实想法告诉爸爸妈妈，不用谎话遮掩。', highlight: '主动承认小错误、认真说明情况时，向日葵会为你点亮。' },
+            '🌹 勇敢小玫瑰': { price: 9, achievement: '勇敢成就：敢尝试新事情', detail: '遇到困难不马上放弃，愿意迈出第一步。', highlight: '第一次尝试新游戏、新任务或新朋友时，小玫瑰会热烈开放。' },
+            '🌷 快乐郁金香': { price: 9, achievement: '分享成就：把快乐分给别人', detail: '愿意分享玩具、食物和自己的好心情。', highlight: '把喜欢的东西递给伙伴一起玩，郁金香就会开得更鲜艳。' },
+            '🌸 温暖粉樱花': { price: 10, achievement: '善良成就：主动关心别人', detail: '看见别人需要帮助时，愿意伸出手、说句暖心话。', highlight: '安慰难过的伙伴、帮助家人做小事时，粉樱花会开满枝头。' },
+            '💐 勤劳康乃馨': { price: 10, achievement: '自律成就：把自己的事情做好', detail: '愿意整理物品、遵守约定，并坚持完成小任务。', highlight: '玩完玩具主动收好、按时完成约定，康乃馨会变得更挺拔。' },
+            '🌺 甜美木槿花': { price: 11, achievement: '感恩成就：记得说谢谢', detail: '能看见别人的帮助，并用行动表达感谢。', highlight: '认真说谢谢、给帮助过你的人一个拥抱，木槿花就会更甜美。' },
+            '🪻 优雅薰衣草': { price: 11, achievement: '礼貌成就：会使用礼貌用语', detail: '会主动打招呼，并记得说请、谢谢和对不起。', highlight: '礼貌地和别人相处，薰衣草会散发出好闻的香气。' },
+            '🌾 幸运黄金麦': { price: 12, achievement: '勤劳成就：主动帮忙做事情', detail: '愿意自己动手，也愿意为家人分担力所能及的小家务。', highlight: '主动摆碗筷、收拾桌面或整理房间，黄金麦会长得更饱满。' },
+            '🍀 幸运四叶草': { price: 12, achievement: '合作成就：和伙伴一起完成任务', detail: '愿意倾听、轮流和配合，让大家一起把事情做好。', highlight: '和伙伴一起搭积木、收玩具或解决问题，四叶草会带来好运。' },
+            '💖 充满爱心花': { price: 13, achievement: '关爱成就：把温暖传给身边人', detail: '会照顾家人和伙伴，也愿意用拥抱和陪伴表达爱。', highlight: '关心别人今天开不开心，爱心花就会闪闪发光。' }
+        };
+
+        const FLOWER_PROFILE_MAP = {};
+        SEED_INVENTORY_ITEMS.forEach(item => {
+            const detail = FLOWER_PROFILE_DETAILS[item.flower] || {};
+            const profile = { ...item, ...detail, detail: detail.detail || item.desc, highlight: detail.highlight || item.desc };
+            FLOWER_PROFILE_MAP[item.flower] = profile;
+            FLOWER_PROFILE_MAP[item.trait] = profile;
+            FLOWER_PROFILE_MAP[item.name] = profile;
+        });
+
+        function getFlowerProfile(name) {
+            const key = (name || '').trim();
+            return FLOWER_PROFILE_MAP[key] || {
+                icon: key.split(' ')[0] || '🌸', flower: key || '🌸 品格之花', trait: '品格成就',
+                price: 8, achievement: '品格成就：继续发芽', detail: '这朵花记录着你正在养成的好习惯。',
+                highlight: '继续坚持下去，它会慢慢长得更漂亮。', desc: '继续坚持下去，它会慢慢长得更漂亮。'
+            };
+        }
+
+        let selectedTargetPlotEl = null;
+
+        function openSeedInventory(targetPlotEl = null) {
+            if (hasMovedFar) return;
+            selectedTargetPlotEl = targetPlotEl;
+            renderSeedInventory();
+            document.getElementById('seedInventoryModal').classList.add('active');
+        }
+
+        function closeSeedInventory() {
+            document.getElementById('seedInventoryModal').classList.remove('active');
+        }
+
+        function renderSeedInventory() {
+            const grid = document.getElementById('seedInventoryGrid');
+            grid.innerHTML = SEED_INVENTORY_ITEMS.map(item => {
+                const profile = getFlowerProfile(item.flower);
+                return `
+                <div class="seed-item-card" onclick="selectAndPlantSeed('${item.flower}', '${item.trait}')" role="button" tabindex="0">
+                    <div class="seed-card-top">
+                        <div class="seed-card-icon">${item.icon}</div>
+                        <div class="seed-price-badge">🌟 ${profile.price} 星</div>
+                    </div>
+                    <div class="seed-card-name">${item.name}</div>
+                    <div class="seed-card-trait">${item.trait}</div>
+                    <div class="seed-card-achievement">${profile.achievement}</div>
+                    <div class="seed-card-desc">${profile.detail}</div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function selectAndPlantSeed(flowerName, traitName) {
+            closeSeedInventory();
+            const profile = getFlowerProfile(flowerName);
+
+            let targetPlot = selectedTargetPlotEl;
+            if (!targetPlot || !targetPlot.classList.contains('empty-plot')) {
+                targetPlot = document.querySelector('.farm-plot.empty-plot');
+            }
+
+            if (!targetPlot) {
+                const bubble = document.getElementById('farmBubble');
+                bubble.innerHTML = '🌸 农场地块已经全种满啦！<br>先照顾好现有的花朵吧！✨';
+                return;
+            }
+
+            document.getElementById('farmBubble').innerHTML = `🌱 已选择【${profile.flower}】<br>价格：${profile.price} 颗品格星星，正在自动播种。`;
+            executePlotPlantingAnimation(targetPlot, flowerName, traitName);
+        }
+
+        function executePlotPlantingAnimation(el, flowerName, traitName) {
+            if (el.getAttribute('data-planting') === 'true') return;
+            el.setAttribute('data-planting', 'true');
+            el.classList.remove('empty-plot');
+
+            const flowerIcon = flowerName.split(' ')[0] || '🌸';
+            const flowerLabel = flowerName.split(' ').slice(1).join(' ') || flowerName;
+
+            // 1. 种子下落
+            const seedDrop = document.createElement('div');
+            seedDrop.className = 'seed-drop-particle';
+            seedDrop.innerText = flowerIcon;
+            el.appendChild(seedDrop);
+
+            // 2. 泥土飞溅与萌发
+            setTimeout(() => {
+                seedDrop.remove();
+
+                const soilPuff = document.createElement('div');
+                soilPuff.className = 'soil-puff-particle';
+                soilPuff.innerText = '💨';
+                el.appendChild(soilPuff);
+                setTimeout(() => soilPuff.remove(), 700);
+
+                el.innerHTML = `
+                    <div class="plot-plant planting-anim">
+                        <div class="plot-flower-head">${flowerIcon}</div>
+                        <div class="plot-leaves">
+                            <span class="plot-leaf-l">🍃</span>
+                            <span class="plot-leaf-r">🍃</span>
+                        </div>
+                        <div class="plot-stem"></div>
+                        <div class="plot-label">${flowerLabel}</div>
+                    </div>
+                    <div class="plot-soil-mound"></div>`;
+
+                el.onclick = () => clickFarmPlot(el, flowerName);
+
+                // 3. 飘浮得分
+                const scoreText = document.createElement('div');
+                scoreText.className = 'float-score-text';
+                scoreText.innerText = `✨ ${traitName} +10`;
+                el.appendChild(scoreText);
+                setTimeout(() => scoreText.remove(), 1500);
+
+                const bubble = document.getElementById('farmBubble');
+                bubble.innerHTML = `🎉 成功播种【${flowerName}】！<br>培养优秀【${traitName}】好品质！🌸✨`;
+
+                fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `龙宝，我刚刚在农场里成功播种了【${flowerName}】！`, session_id: sessionId })
+                }).then(res => res.json()).then(data => {
+                    if (data.garden) updateGardenUI(data.garden);
+                });
+            }, 700);
+        }
+
+        function clickFarmPlot(el, name) {
+            if (hasMovedFar) return;
+            const head = el.querySelector('.plot-flower-head');
+            if (head) {
+                head.style.transform = 'scale(1.5) rotate(15deg)';
+                setTimeout(() => { head.style.transform = ''; }, 400);
+            }
+            showFlowerModal(name, name);
+        }
+
+        function plantNewFlower(el) {
+            if (el.getAttribute('data-planting') === 'true') return;
+            el.setAttribute('data-planting', 'true');
+            el.classList.remove('empty-plot');
+
+            // 1. 种子下落
+            const seedDrop = document.createElement('div');
+            seedDrop.className = 'seed-drop-particle';
+            seedDrop.innerText = '✨🌱';
+            el.appendChild(seedDrop);
+
+            // 2. 泥土飞溅与萌发
+            setTimeout(() => {
+                seedDrop.remove();
+
+                const soilPuff = document.createElement('div');
+                soilPuff.className = 'soil-puff-particle';
+                soilPuff.innerText = '💨';
+                el.appendChild(soilPuff);
+                setTimeout(() => soilPuff.remove(), 700);
+
+                el.innerHTML = `
+                    <div class="plot-plant planting-anim">
+                        <div class="plot-flower-head">🌱</div>
+                        <div class="plot-stem"></div>
+                        <div class="plot-label">发芽中...</div>
+                    </div>
+                    <div class="plot-soil-mound"></div>`;
+
+                // 3. 飘浮得分
+                const scoreText = document.createElement('div');
+                scoreText.className = 'float-score-text';
+                scoreText.innerText = '✨ 品格能量 +10';
+                el.appendChild(scoreText);
+                setTimeout(() => scoreText.remove(), 1500);
+
+                const bubble = document.getElementById('farmBubble');
+                bubble.innerHTML = '🌱 太棒啦！地块成功播种！<br>小龙宝正在为你记录品格呢！✨';
+
+                setTimeout(() => {
+                    closeFarm();
+                    sendQuickMessage('龙宝，帮我种下一颗品格种子吧！');
+                }, 1200);
+            }, 700);
+        }
+
+        function waterAllPlots() {
+            const can = document.getElementById('wateringCanTool');
+            const bubble = document.getElementById('farmBubble');
+            bubble.innerHTML = '💦 咕噜噜~ 3D 水壶浇水啦！<br>鲜花喝饱水，品格能量 +20！🌸✨';
+
+            const plants = document.querySelectorAll('.farm-plot .plot-plant');
+            if (plants.length === 0) {
+                bubble.innerHTML = '🌱 农场里还没有花朵呢！<br>点击空地块先种一棵吧！';
+                return;
+            }
+
+            // 依次给有花的地块浇水
+            plants.forEach((plant, i) => {
+                const plot = plant.closest('.farm-plot');
+                const rect = plot.getBoundingClientRect();
+
+                setTimeout(() => {
+                    // 移动水壶到当前地块上方
+                    can.style.left = (rect.left + rect.width / 2 + 10) + 'px';
+                    can.style.top = (rect.top - 20) + 'px';
+                    can.classList.add('active');
+
+                    // 生成喷水粒子
+                    const spray = document.createElement('div');
+                    spray.className = 'water-spray';
+                    spray.innerHTML = '<span class="water-drop-particle">💧</span><span class="water-drop-particle" style="animation-delay:0.2s">💧</span><span class="water-drop-particle" style="animation-delay:0.4s">💧</span>';
+                    plot.appendChild(spray);
+
+                    // 花朵欢跃 + 悬浮爱心
+                    plant.style.transform = 'rotateX(-44deg) scale(1.25) translateY(-8px)';
+                    plant.style.filter = 'drop-shadow(0 0 14px #4ade80)';
+
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-float-particle';
+                    heart.innerText = i % 2 === 0 ? '💖' : '🌸';
+                    plot.appendChild(heart);
+
+                    const score = document.createElement('div');
+                    score.className = 'float-score-text';
+                    score.innerText = '+20 滋润';
+                    plot.appendChild(score);
+
+                    setTimeout(() => {
+                        plant.style.transform = '';
+                        plant.style.filter = '';
+                        spray.remove();
+                        heart.remove();
+                        score.remove();
+                    }, 1200);
+                }, i * 300);
+            });
+
+            // 恢复水壶
+            setTimeout(() => {
+                can.classList.remove('active');
+                bubble.innerHTML = '欢迎来到龙宝农场！🌾<br>点击空地块种花，点击花朵看成就！';
+            }, plants.length * 300 + 1200);
+        }
+
+        function sunlightAllPlots() {
+            const overlay = document.getElementById('sunlightOverlay');
+            const bubble = document.getElementById('farmBubble');
+            bubble.innerHTML = '☀️ 暖洋洋的阳光照耀着农场！<br>鲜花舒展叶片，吸收阳光 +15！🌟';
+
+            overlay.classList.add('active');
+
+            const plants = document.querySelectorAll('.farm-plot .plot-plant');
+            plants.forEach((plant, i) => {
+                const plot = plant.closest('.farm-plot');
+                setTimeout(() => {
+                    plant.style.transform = 'rotateX(-44deg) scale(1.2) rotate(5deg)';
+                    plant.style.filter = 'drop-shadow(0 0 16px #facc15)';
+
+                    const star = document.createElement('div');
+                    star.className = 'heart-float-particle';
+                    star.innerText = '🌟';
+                    plot.appendChild(star);
+
+                    const score = document.createElement('div');
+                    score.className = 'float-score-text';
+                    score.innerText = '+15 阳光';
+                    plot.appendChild(score);
+
+                    setTimeout(() => {
+                        plant.style.transform = '';
+                        plant.style.filter = '';
+                        star.remove();
+                        score.remove();
+                    }, 1200);
+                }, i * 150);
+            });
+
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                bubble.innerHTML = '欢迎来到龙宝农场！🌾<br>点击空地块种花，点击花朵看成就！';
+            }, 3000);
+        }
+
+        function playWelcomeVoice() { playNeuralAudio('./audio/welcome.mp3', 'welcome_btn'); }
+
+        async function fetchGardenData() {
+            try {
+                const res = await fetch('/api/garden');
+                if (res.ok) { const data = await res.json(); updateGardenUI(data); }
+            } catch (e) { console.error("加载花园数据失败", e); }
+        }
+
+        function updateGardenUI(garden) {
+            if (!garden) return;
+            currentGardenData = garden;
+            const totalSeeds = garden.total_seeds || (garden.seeds ? garden.seeds.length : 0);
+            document.getElementById('seedCountTag').innerText = `${totalSeeds} 颗种子`;
+            document.getElementById('energyFill').style.width = `${Math.min(100, Math.max(15, totalSeeds * 15))}%`;
+
+            const mc = document.getElementById('medalsContainer');
+            if (garden.medals && garden.medals.length > 0) {
+                mc.innerHTML = garden.medals.map(m => `<div class="medal-item">${m}</div>`).join('');
+            } else if (totalSeeds > 0) {
+                mc.innerHTML = `<div class="medal-item">🌱 品格小新苗</div>`;
+            } else {
+                mc.innerHTML = `<span style="font-size:13px; color:#94a3b8; font-style:italic;">和小龙宝聊天，就能解锁勋章哦！</span>`;
+            }
+
+            const pc = document.getElementById('plantsContainer');
+            if (garden.seeds && garden.seeds.length > 0) {
+                const agg = {};
+                garden.seeds.forEach(s => { const n = s.flower || s.trait || '🌸 美丽之花'; agg[n] = (agg[n] || 0) + 1; });
+                pc.innerHTML = Object.keys(agg).map(name => {
+                    const profile = getFlowerProfile(name);
+                    return `
+                        <div class="flower-card-agg" onclick="event.stopPropagation(); showFlowerModal('${name}','${name}')">
+                            <div class="flower-info">
+                                <span class="flower-icon-bub">${profile.icon}</span>
+                                <div class="flower-text-block">
+                                    <span class="flower-title-txt">${profile.flower}</span>
+                                    <span class="flower-achievement-tag">${profile.achievement}</span>
+                                </div>
+                            </div>
+                            <span class="flower-count-tag">已开花 ${agg[name]} 朵</span>
+                            <div class="flower-card-note">${profile.highlight}</div>
+                        </div>`;
+                }).join('');
+            } else {
+                pc.innerHTML = `<span style="font-size:13px; color:#94a3b8; font-style:italic;">每朵花都对应一项品格成就，先和龙宝聊聊天吧！</span>`;
+            }
+        }
+
+        function showFlowerModal(trait, flower) {
+            const profile = getFlowerProfile(flower || trait);
+            document.getElementById('modalFlowerIcon').innerText = profile.icon;
+            document.getElementById('modalFlowerTitle').innerText = profile.achievement;
+            document.getElementById('modalFlowerDesc').innerHTML = `【${profile.flower}】已经开花啦！<br>成就表现：${profile.detail}<br>本次奖励：品格星星 +${profile.price}`;
+            document.getElementById('flowerModal').classList.add('active');
+        }
+        function closeFlowerModal() { document.getElementById('flowerModal').classList.remove('active'); }
+
+        /* ===== 聊天 ===== */
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            messageInput.disabled = true; sendBtn.disabled = true;
+            appendMessage('user', message);
+            messageInput.value = '';
+            const loadingMsg = appendLoadingMessage();
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, session_id: sessionId, voice_id: selectedVoiceId })
+                });
+                const data = await response.json();
+                loadingMsg.remove();
+                if (!response.ok || data.error) { appendMessage('assistant', data.message || '龙宝暂时没连上智慧服务，请检查 API 配置后再试。'); }
+                else { sessionId = data.session_id; appendMessage('assistant', data.text, data.audio_url); if (data.garden) updateGardenUI(data.garden); }
+            } catch (error) { loadingMsg.remove(); appendMessage('assistant', '哎呀，网络好像出了一点小问题，请稍后再试~'); }
+            messageInput.disabled = false; sendBtn.disabled = false; messageInput.focus();
+        }
+
+        function appendMessage(role, text, audioUrl = null) {
+            const msgRow = document.createElement('div');
+            msgRow.className = `message-row ${role}`;
+            const avatarBox = document.createElement('div');
+            avatarBox.className = `msg-avatar-box ${role === 'user' ? 'user-avatar' : ''}`;
+            if (role === 'user') avatarBox.innerText = '👧';
+            else avatarBox.innerHTML = `<img src="./longbao.jpg" alt="龙宝">`;
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'msg-bubble';
+            let cleanText = text.replace(/\[点击播放语音\]\([^\)]+\)/g, '').replace(/\[点击听龙宝说话\]\([^\)]+\)/g, '')
+                                .replace(/\{?https?:\/\/[^\}\s\)]+\}?/g, '').replace(/🎵\s*龙宝说给你听~/g, '').trim();
+            bubbleDiv.innerHTML = formatMarkdown(cleanText);
+
+            if (role === 'assistant') {
+                const btnId = 'speech_btn_' + Math.random().toString(36).substr(2, 7);
+                const voiceBar = document.createElement('div');
+                voiceBar.className = 'voice-play-bar';
+                if (audioUrl) {
+                    voiceBar.onclick = () => playNeuralAudio(audioUrl, btnId);
+                    voiceBar.innerHTML = `<button id="${btnId}" class="voice-play-btn">▶ 听龙宝说话</button>`;
+                    if (isAutoplay) setTimeout(() => playNeuralAudio(audioUrl, btnId), 300);
+                } else {
+                    voiceBar.onclick = () => playBrowserTTS(encodeURIComponent(cleanText), btnId);
+                    voiceBar.innerHTML = `<button id="${btnId}" class="voice-play-btn">▶ 听龙宝说话</button>`;
+                    if (isAutoplay) setTimeout(() => playBrowserTTS(encodeURIComponent(cleanText), btnId), 300);
+                }
+                bubbleDiv.appendChild(voiceBar);
+
+                if (cleanText.includes('任务') || cleanText.includes('小管家') || cleanText.includes('一起完成')) {
+                    const taskCard = document.createElement('div');
+                    taskCard.className = 'task-interactive-card';
+                    taskCard.innerHTML = `<div class="task-card-title">🎯 亲子幸福小任务进行中</div>
+                        <button class="complete-task-btn" onclick="completeTaskAction(this)">✅ 我已完成任务！(点击领奖章)</button>`;
+                    bubbleDiv.appendChild(taskCard);
+                }
+                const chipsDiv = document.createElement('div');
+                chipsDiv.className = 'chat-action-chips';
+                if (cleanText.includes('故事')) {
+                    chipsDiv.innerHTML = `<button class="action-chip-btn" onclick="sendQuickMessage('龙宝，我也要在生活中做到这个好品格！帮我种下一颗种子吧！')">🌱 我做到了</button>
+                        <button class="action-chip-btn" onclick="sendQuickMessage('龙宝，给小朋友讲一个好听的故事吧！')">📖 再听一个</button>`;
+                } else if (cleanText.includes('儿歌')) {
+                    chipsDiv.innerHTML = `<button class="action-chip-btn" onclick="sendQuickMessage('龙宝，给小朋友唱一首好听的儿歌吧！')">🎶 再唱一首</button>`;
+                }
+                if (chipsDiv.innerHTML) bubbleDiv.appendChild(chipsDiv);
+            }
+            msgRow.appendChild(avatarBox);
+            msgRow.appendChild(bubbleDiv);
+            chatMessages.appendChild(msgRow);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return msgRow;
+        }
+
+        function completeTaskAction(btn) {
+            btn.disabled = true; btn.innerHTML = '🎉 任务完成报告中...';
+            sendQuickMessage("龙宝龙宝！我今天完成了幸福小任务！帮我颁发闪亮的小勋章吧！");
+        }
+
+        let currentPlayingAudio = null;
+        function playNeuralAudio(audioUrl, btnId) {
+            const btn = btnId ? document.getElementById(btnId) : null;
+            if (currentPlayingAudio) {
+                currentPlayingAudio.pause(); currentPlayingAudio = null;
+                document.querySelectorAll('.voice-play-btn').forEach(b => b.innerText = '▶ 听龙宝说话');
+                if (btn && btn.getAttribute('data-playing') === 'true') { btn.removeAttribute('data-playing'); return; }
+            }
+            if (!audioUrl) return;
+            const audio = new Audio(audioUrl);
+            currentPlayingAudio = audio;
+            if (btn) {
+                btn.setAttribute('data-playing', 'true');
+                btn.innerText = '⏸️ 正在播放 (点击暂停)';
+                audio.onended = () => { btn.innerText = '▶ 听龙宝说话'; btn.removeAttribute('data-playing'); currentPlayingAudio = null; };
+                audio.onerror = () => { btn.innerText = '▶ 听龙宝说话'; btn.removeAttribute('data-playing'); currentPlayingAudio = null; };
+            }
+            audio.play().catch(e => { console.error("Audio error:", e); playBrowserTTS(encodeURIComponent("你好呀！"), btnId); });
+        }
+
+        function cleanSpeechText(rawText) {
+            if (!rawText) return '';
+            let t = rawText;
+            try { t = decodeURIComponent(t); } catch(e){}
+            t = t.replace(/\[[^\]]+\]\([^\)]+\)/g, '').replace(/\{?https?:\/\/[^\}\s\)]+\}?/g, '')
+                 .replace(/```[\s\S]*?```/g, '').replace(/`([^`]+)`/g, '$1').replace(/#{1,6}\s*/g, '')
+                 .replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1')
+                 .replace(/>\s*/g, '').replace(/-\s*/g, '')
+                 .replace(/[^\u4e00-\u9fff，。！？、；：]/g, ' ').replace(/\s+/g, ' ').trim();
+            return t;
+        }
+        function stopSpeech() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.querySelectorAll('.voice-play-btn').forEach(btn => btn.innerText = '▶ 听龙宝说话');
+        }
+        function playBrowserTTS(encodedText, btnId) {
+            if (!('speechSynthesis' in window)) return;
+            const plainText = cleanSpeechText(encodedText);
+            if (!plainText) return;
+            const btn = btnId ? document.getElementById(btnId) : null;
+            if (window.speechSynthesis.speaking) { stopSpeech(); return; }
+            stopSpeech();
+            const utterance = new SpeechSynthesisUtterance(plainText);
+            utterance.lang = 'zh-CN'; utterance.rate = 0.92; utterance.pitch = 1.25;
+            const voices = window.speechSynthesis.getVoices();
+            const voiceNames = selectedVoiceId === 'cute_boy'
+                ? ['Yunxia', 'Yunxi', 'Yunyang', 'Male', '男']
+                : ['Xiaoyi', 'Xiaoxiao', 'Female', '女'];
+            const preferredVoice = voices.find(v => (v.lang.includes('zh') || v.lang.includes('CN')) && voiceNames.some(name => v.name.includes(name)));
+            if (preferredVoice) utterance.voice = preferredVoice;
+            if (selectedVoiceId === 'cute_boy') { utterance.rate = 0.95; utterance.pitch = 1.28; }
+            if (btn) {
+                btn.innerText = '⏸️ 正在朗读 (点击暂停)';
+                utterance.onend = () => { if (btn) btn.innerText = '▶ 听龙宝说话'; };
+                utterance.onerror = () => { if (btn) btn.innerText = '▶ 听龙宝说话'; };
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+        function appendLoadingMessage() {
+            const m = document.createElement('div');
+            m.className = 'message-row assistant';
+            m.innerHTML = `<div class="msg-avatar-box"><img src="./longbao.jpg" alt="龙宝"></div>
+                <div class="msg-bubble" style="color:#64748b;">龙宝思考中 💭...</div>`;
+            chatMessages.appendChild(m); chatMessages.scrollTop = chatMessages.scrollHeight;
+            return m;
+        }
+        function formatMarkdown(text) {
+            if (!text) return '';
+            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+        }
+    </script>
+</body>
+</html>
