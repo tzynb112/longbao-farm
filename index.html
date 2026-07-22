@@ -982,11 +982,18 @@
         localStorage.setItem('longbao_session_id', sessionId);
         let isAutoplay = true;
         let currentGardenData = null;
-        const API_BASE_URL = 'https://d-ds.tzy18828890329.workers.dev';
+        const API_BASE_URL = 'https://nbg43svttx.coze.site';
         const apiUrl = (path) => `${API_BASE_URL}${path}`;
-        const COZE_WEB_SDK_CONFIG = {
+        const COZE_API_CONFIG = {
             projectId: '7664594907054702643',
             token: ''
+        };
+        const apiHeaders = (headers = {}) => COZE_API_CONFIG.token
+            ? { ...headers, Authorization: `Bearer ${COZE_API_CONFIG.token}` }
+            : headers;
+        const resolveApiAssetUrl = (assetUrl) => {
+            if (!assetUrl || /^https?:\/\//i.test(assetUrl)) return assetUrl;
+            return new URL(assetUrl, API_BASE_URL).toString();
         };
         let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'warm_female';
         const TOTAL_PLOTS = 24;
@@ -1086,7 +1093,7 @@
             if (!select) return;
             select.value = selectedVoiceId;
             try {
-                const res = await fetch(apiUrl('/api/voices'));
+                const res = await fetch(apiUrl('/api/voices'), { headers: apiHeaders() });
                 if (!res.ok) return;
                 const voices = await res.json();
                 select.innerHTML = voices.map(voice => `<option value="${voice.id}">${voice.label}</option>`).join('');
@@ -1309,7 +1316,7 @@
 
                 fetch(apiUrl('/api/chat'), {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: apiHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({ message: `龙宝，我刚刚在农场里成功播种了【${flowerName}】！`, session_id: sessionId })
                 }).then(res => res.json()).then(data => {
                     if (data.garden) updateGardenUI(data.garden);
@@ -1475,7 +1482,7 @@
 
         async function fetchGardenData() {
             try {
-            const res = await fetch(apiUrl('/api/garden'));
+                const res = await fetch(apiUrl('/api/garden'), { headers: apiHeaders() });
                 if (res.ok) { const data = await res.json(); updateGardenUI(data); }
             } catch (e) { console.error("加载花园数据失败", e); }
         }
@@ -1539,13 +1546,13 @@
             const loadingMsg = appendLoadingMessage();
             try {
                 const response = await fetch(apiUrl('/api/chat'), {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: apiHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({ message, session_id: sessionId, voice_id: selectedVoiceId })
                 });
                 const data = await response.json();
                 loadingMsg.remove();
                 if (!response.ok || data.error) { appendMessage('assistant', data.message || '龙宝暂时没连上智慧服务，请检查 API 配置后再试。'); }
-                else { sessionId = data.session_id; appendMessage('assistant', data.text, data.audio_url); if (data.garden) updateGardenUI(data.garden); }
+                else { sessionId = data.session_id; appendMessage('assistant', data.text, resolveApiAssetUrl(data.audio_url)); if (data.garden) updateGardenUI(data.garden); }
             } catch (error) { loadingMsg.remove(); appendMessage('assistant', '哎呀，网络好像出了一点小问题，请稍后再试~'); }
             messageInput.disabled = false; sendBtn.disabled = false; messageInput.focus();
         }
