@@ -982,6 +982,8 @@
         localStorage.setItem('longbao_session_id', sessionId);
         let isAutoplay = true;
         let currentGardenData = null;
+        const API_BASE_URL = 'https://d-ds.tzy18828890329.workers.dev';
+        const apiUrl = (path) => `${API_BASE_URL}${path}`;
         let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'warm_female';
         const TOTAL_PLOTS = 24;
         const chatMessages = document.getElementById('chatMessages');
@@ -1080,7 +1082,7 @@
             if (!select) return;
             select.value = selectedVoiceId;
             try {
-                const res = await fetch('/api/voices');
+                const res = await fetch(apiUrl('/api/voices'));
                 if (!res.ok) return;
                 const voices = await res.json();
                 select.innerHTML = voices.map(voice => `<option value="${voice.id}">${voice.label}</option>`).join('');
@@ -1301,7 +1303,7 @@
                 const bubble = document.getElementById('farmBubble');
                 bubble.innerHTML = `🎉 成功播种【${flowerName}】！<br>培养优秀【${traitName}】好品质！🌸✨`;
 
-                fetch('/api/chat', {
+                fetch(apiUrl('/api/chat'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: `龙宝，我刚刚在农场里成功播种了【${flowerName}】！`, session_id: sessionId })
@@ -1469,7 +1471,7 @@
 
         async function fetchGardenData() {
             try {
-                const res = await fetch('/api/garden');
+            const res = await fetch(apiUrl('/api/garden'));
                 if (res.ok) { const data = await res.json(); updateGardenUI(data); }
             } catch (e) { console.error("加载花园数据失败", e); }
         }
@@ -1532,7 +1534,7 @@
             messageInput.value = '';
             const loadingMsg = appendLoadingMessage();
             try {
-                const response = await fetch('/api/chat', {
+                const response = await fetch(apiUrl('/api/chat'), {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message, session_id: sessionId, voice_id: selectedVoiceId })
                 });
