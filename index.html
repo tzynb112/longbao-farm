@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -170,7 +170,12 @@
             border: 2.5px solid #fdba74; border-radius: 20px; padding: 16px;
             box-shadow: 0 6px 18px rgba(251,146,60,0.2);
         }
-        .task-card-title { font-size: 14px; font-weight: 800; color: #ea580c; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+        .task-card-title { font-size: 15px; font-weight: 800; color: #ea580c; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+        .task-interactive-card {
+            margin-top: 14px; background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            border: 2.5px solid #fdba74; border-radius: 20px; padding: 16px;
+            box-shadow: 0 6px 18px rgba(251,146,60,0.2);
+        }
         .complete-task-btn {
             width: 100%; margin-top: 10px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
             color: white; border: none; padding: 12px 20px; border-radius: 50px;
@@ -293,7 +298,8 @@
             border-radius: 50%;
             box-shadow: 0 0 80px 30px rgba(253,224,71,0.65), 0 0 160px 60px rgba(234,179,8,0.3);
             animation: sunGlow 4s ease-in-out infinite alternate;
-        }
+
+}
         .sun-rays {
             position: absolute; top: 50%; left: 50%; width: 0; height: 0; z-index: 4;
             animation: sunSpin 30s linear infinite;
@@ -322,6 +328,26 @@
         .decor-tree.t4 { right: 15%; font-size: 42px; }
         .decor-house { position: absolute; bottom: 47%; right: 22%; font-size: 50px; z-index: 4; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2)); }
         .decor-windmill { position: absolute; bottom: 48%; left: 22%; font-size: 45px; z-index: 4; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2)); }
+
+        /* 童话农场的环境层：晨雾、花坡、池塘与小径让田地拥有可探索的纵深 */
+        .farm-haze { position:absolute; left:-10%; right:-10%; bottom:42%; height:130px; z-index:3; opacity:.46; pointer-events:none;
+            background:radial-gradient(ellipse at 18% 70%, rgba(255,255,255,.86) 0 13%, transparent 40%), radial-gradient(ellipse at 72% 34%, rgba(255,255,255,.7) 0 12%, transparent 42%); filter:blur(12px); }
+        .farm-meadow { position:absolute; bottom:37%; left:-4%; width:108%; height:125px; z-index:3; border-radius:50% 50% 0 0;
+            background:radial-gradient(circle at 11% 72%, #fda4af 0 3px, transparent 4px), radial-gradient(circle at 16% 42%, #fde68a 0 3px, transparent 4px), radial-gradient(circle at 83% 58%, #c4b5fd 0 3px, transparent 4px), radial-gradient(circle at 91% 27%, #f9a8d4 0 3px, transparent 4px), linear-gradient(180deg,#6ee7b7,#22c55e); box-shadow: inset 0 15px 25px rgba(255,255,255,.2); }
+        .farm-pond { position:absolute; right:5%; bottom:31%; width:210px; height:94px; z-index:8; border:8px solid #65a30d; border-radius:50%;
+            background:radial-gradient(ellipse at 38% 35%, rgba(255,255,255,.95) 0 3%, transparent 4%), repeating-radial-gradient(ellipse at 50% 50%, #7dd3fc 0 13px, #38bdf8 14px 16px); box-shadow:inset 0 8px 16px rgba(14,116,144,.36), 0 10px 16px rgba(21,128,61,.22); animation:pondShimmer 5s ease-in-out infinite; }
+        .farm-pond::after { content:'🦆'; position:absolute; left:42%; top:24%; font-size:26px; filter:drop-shadow(0 3px 2px rgba(0,0,0,.16)); }
+        .farm-bridge { position:absolute; right:20%; bottom:35%; width:80px; height:26px; z-index:10; transform:rotate(-11deg); border:6px solid #92400e; border-bottom:0; border-radius:55% 55% 0 0; background:repeating-linear-gradient(90deg,#d97706 0 10px,#f59e0b 11px 13px); box-shadow:0 5px 5px rgba(0,0,0,.16); }
+        .farm-path { position:absolute; bottom:27%; left:-5%; width:112%; height:90px; z-index:7; transform:rotate(-2deg); opacity:.84;
+            background:linear-gradient(174deg,transparent 0 31%, rgba(250,204,21,.9) 32% 41%, rgba(180,83,9,.7) 42% 48%, transparent 49% 100%); }
+        .farm-flowerbed { position:absolute; bottom:36%; z-index:9; font-size:32px; letter-spacing:-9px; filter:drop-shadow(0 5px 5px rgba(0,0,0,.14)); }
+        .farm-flowerbed.bed-left { left:8%; transform:rotate(-6deg); } .farm-flowerbed.bed-right { right:8%; transform:rotate(7deg); }
+        .farm-scarecrow { position:absolute; left:27%; bottom:37%; z-index:11; font-size:50px; filter:drop-shadow(0 7px 7px rgba(0,0,0,.2)); animation:scarecrowWave 4s ease-in-out infinite; }
+        .farm-signpost { position:absolute; left:12%; bottom:30%; z-index:13; padding:7px 11px; border:3px solid #78350f; border-radius:8px; background:#fef3c7; color:#78350f; font-size:12px; font-weight:900; transform:rotate(-5deg); box-shadow:0 5px 8px rgba(0,0,0,.16); }
+        .farm-fireflies { position:absolute; inset:0; z-index:14; pointer-events:none; background:radial-gradient(circle at 22% 70%,#fef08a 0 2px,transparent 3px),radial-gradient(circle at 34% 59%,#fef08a 0 2px,transparent 3px),radial-gradient(circle at 75% 68%,#fef08a 0 2px,transparent 3px),radial-gradient(circle at 88% 54%,#fef08a 0 2px,transparent 3px); animation:fireflyGlow 2.8s ease-in-out infinite alternate; }
+        @keyframes pondShimmer { 0%,100% { filter:saturate(1); transform:scale(1); } 50% { filter:saturate(1.25) brightness(1.08); transform:scale(1.025); } }
+        @keyframes scarecrowWave { 0%,100% { transform:rotate(-2deg); } 50% { transform:rotate(3deg); } }
+        @keyframes fireflyGlow { from { opacity:.36; } to { opacity:1; } }
 
         /* 木围栏 - 刚好处于 43% 高度 */
         .farm-fence-row {
@@ -573,7 +599,8 @@
         /* 阳光耀斑光层 */
         .sunlight-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(255,193,7,0.2) 40%, rgba(255,255,255,0) 70%);
+
+background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(255,193,7,0.2) 40%, rgba(255,255,255,0) 70%);
             pointer-events: none; z-index: 22; opacity: 0;
             transition: opacity 0.8s ease;
         }
@@ -772,6 +799,7 @@
             .seed-card-achievement, .seed-card-desc { font-size: 10px; }
             .seed-price-badge { font-size: 10px; padding: 3px 6px; }
         }
+
         /* ========== 欢迎弹窗：询问小朋友名字 ========== */
         .welcome-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -825,26 +853,24 @@
     </style>
 </head>
 <body>
+    <!-- 欢迎弹窗：首次访问询问小朋友名字 -->
+    <div id="welcomeOverlay" class="welcome-overlay">
+        <div class="welcome-card">
+            <div class="welcome-avatar">
+                <img src="/static/longbao.jpg" alt="龙宝">
+            </div>
+            <div class="welcome-title">你好呀小朋友！👋</div>
+            <div class="welcome-desc">我是龙宝~<br>你能告诉我你叫什么名字吗？</div>
+            <div class="welcome-input-wrap">
+                <input id="welcomeInput" class="welcome-input" type="text" placeholder="输入你的名字" maxlength="12">
+                <button id="welcomeMicBtn" class="welcome-mic" title="按住说话">🎤</button>
+            </div>
+            <button id="welcomeSubmit" class="welcome-submit">告诉龙宝！</button>
+        </div>
+    </div>
 
     <div class="bubble-bg">
         <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-    </div>
-
-    <!-- ========== 首次访问：询问小朋友名字 ========== -->
-    <div class="welcome-overlay" id="welcomeOverlay">
-        <div class="welcome-card">
-            <div class="welcome-avatar"><img src="./longbao.jpg" alt="龙宝"></div>
-            <div class="welcome-title">🦕 你好呀，小朋友！</div>
-            <div class="welcome-desc">
-                龙宝是来自自贡的小恐龙～<br>
-                告诉我你叫什么名字，我们一起去品格农场种花吧！
-            </div>
-            <div class="welcome-input-wrap">
-                <input class="welcome-input" id="welcomeInput" type="text" placeholder="输入你的名字..." maxlength="12">
-                <button class="welcome-mic" id="welcomeMicBtn" title="用说的">🎤</button>
-            </div>
-            <button class="welcome-submit" id="welcomeSubmit">开始玩吧！🚀</button>
-        </div>
     </div>
 
     <!-- 品格成就弹窗 -->
@@ -875,7 +901,7 @@
         </div>
     </div>
 
-    <!-- ========== 2.5D 等距农场花园 ========== -->
+<!-- ========== 2.5D 等距农场花园 ========== -->
     <div class="farm-fullscreen" id="farmFullscreen">
         <!-- 摄像机可拖拽平移的全景农场世界画布 -->
         <div class="farm-world-canvas" id="farmWorldCanvas">
@@ -904,6 +930,8 @@
                 <div class="mtn mtn-2"></div>
                 <div class="mtn mtn-3"></div>
             </div>
+            <div class="farm-haze"></div>
+            <div class="farm-meadow"></div>
 
             <!-- 远景装饰 -->
             <div class="decor-tree t1">🌳</div>
@@ -912,6 +940,14 @@
             <div class="decor-tree t4">🌲</div>
             <div class="decor-house">🏠</div>
             <div class="decor-windmill">🎡</div>
+            <div class="farm-flowerbed bed-left">🌼🌷🌼🌸</div>
+            <div class="farm-flowerbed bed-right">🌷🌼🌸🌼</div>
+            <div class="farm-scarecrow">🧑‍🌾</div>
+            <div class="farm-signpost">龙宝农场<br>慢慢长大</div>
+            <div class="farm-path"></div>
+            <div class="farm-pond"></div>
+            <div class="farm-bridge"></div>
+            <div class="farm-fireflies"></div>
 
             <!-- 围栏 -->
             <div class="farm-fence-row">
@@ -927,7 +963,7 @@
 
             <!-- 龙宝 -->
             <div class="farm-mascot">
-                <img src="./longbao.jpg" alt="龙宝" class="farm-mascot-img">
+                <img src="/static/longbao.jpg" alt="龙宝" class="farm-mascot-img">
                 <div class="farm-mascot-speech" id="farmBubble">
                     欢迎来到龙宝农场！🌾<br>点击空地块选种子，点击花朵看对应成就！
                 </div>
@@ -968,7 +1004,7 @@
         <div class="farm-toolbar">
             <button class="farm-tool-btn" onclick="waterAllPlots()">💦 浇水滋润</button>
             <button class="farm-tool-btn" onclick="sunlightAllPlots()">☀️ 阳光普照</button>
-            <button class="farm-tool-btn primary" onclick="closeFarm(); sendQuickMessage('领取今日幸福任务')">🎯 任务赚种子</button>
+            <button class="farm-tool-btn primary" onclick="handleDailyTask()">🎯 今日任务</button>
         </div>
     </div>
 
@@ -977,7 +1013,7 @@
         <div class="header-bar">
             <div class="header-brand">
                 <div class="avatar-frame">
-                    <img src="./longbao.jpg" alt="蓝龙龙宝" class="avatar-img">
+                    <img src="/static/longbao.jpg" alt="蓝龙龙宝" class="avatar-img">
                     <div class="avatar-badge">龙宝</div>
                 </div>
                 <div class="brand-titles">
@@ -1009,6 +1045,7 @@
                         <span id="seedCountTag" style="color:#0284c7;">0 颗种子</span>
                     </div>
                     <div class="energy-bar-box"><div class="energy-fill" id="energyFill"></div></div>
+                    <div id="growthMeta" style="margin-top:8px; font-size:12px; color:#64748b; font-weight:700;">Lv.1 · 0 成长值 · 0 颗星星</div>
                 </div>
                 <div class="panel-card">
                     <div class="panel-card-title">
@@ -1033,7 +1070,7 @@
             <div class="chat-container">
                 <div class="chat-messages" id="chatMessages">
                     <div class="message-row assistant">
-                            <div class="msg-avatar-box"><img src="./longbao.jpg" alt="龙宝"></div>
+                        <div class="msg-avatar-box"><img src="/static/longbao.jpg" alt="龙宝"></div>
                         <div class="msg-bubble">
                             幸福种子，品格发芽——龙宝来啦！🦕✨<br>
                             我是龙宝，一只来自自贡恐龙之乡的小恐龙！今天我们一起种一颗品格种子好不好呀？
@@ -1060,7 +1097,7 @@
                     <div class="magic-icon">🏡</div>
                     <div class="magic-text"><h4>品格农场</h4><p>2.5D 等距种花园</p></div>
                 </div>
-                <div class="magic-card" onclick="sendQuickMessage('领取今日幸福任务')">
+                <div class="magic-card" onclick="handleDailyTask()">
                     <div class="magic-icon">🎯</div>
                     <div class="magic-text"><h4>幸福小管家</h4><p>领取亲子任务</p></div>
                 </div>
@@ -1074,23 +1111,19 @@
 
     <script>
         /* ===== 初始化 ===== */
+        const API_BASE_URL = 'https://longbao-d5g4soemte4fba7c3-1457149463.ap-shanghai.app.tcloudbase.com'; // 已部署的云端 API
+        const apiUrl = (path) => API_BASE_URL ? `${API_BASE_URL.replace(/\/$/, '')}${path}` : path;
+        const resolveAudioUrl = (url) => {
+            if (!url) return url;
+            if (/^(https?:|data:|blob:)/i.test(url)) return url;
+            if (API_BASE_URL) return `${API_BASE_URL.replace(/\/$/, '')}${url}`;
+            return url;
+        };
+
         let sessionId = localStorage.getItem('longbao_session_id') || 'session_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('longbao_session_id', sessionId);
         let isAutoplay = true;
         let currentGardenData = null;
-        const API_BASE_URL = 'https://longbao-d5g4soemte4fba7c3-1457149463.ap-shanghai.app.tcloudbase.com';
-        const apiUrl = (path) => `${API_BASE_URL}${path}`;
-        const COZE_API_CONFIG = {
-            projectId: '7664594907054702643',
-            token: ''
-        };
-        const apiHeaders = (headers = {}) => COZE_API_CONFIG.token
-            ? { ...headers, Authorization: `Bearer ${COZE_API_CONFIG.token}` }
-            : headers;
-        const resolveApiAssetUrl = (assetUrl) => {
-            if (!assetUrl || /^(https?:|data:|blob:)/i.test(assetUrl)) return assetUrl;
-            return new URL(assetUrl, API_BASE_URL).toString();
-        };
         let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'cute_boy';
         const TOTAL_PLOTS = 24;
         const chatMessages = document.getElementById('chatMessages');
@@ -1167,7 +1200,8 @@
             if (!container) return;
             container.innerHTML = '';
             for (let i = 0; i < 12; i++) {
-                const ray = document.createElement('div');
+
+const ray = document.createElement('div');
                 ray.className = 'sun-ray';
                 ray.style.transform = `rotate(${i * 30}deg)`;
                 container.appendChild(ray);
@@ -1189,7 +1223,7 @@
             if (!select) return;
             select.value = selectedVoiceId;
             try {
-                const res = await fetch(apiUrl('/api/voices'), { headers: apiHeaders() });
+                const res = await fetch(apiUrl('/api/voices'));
                 if (!res.ok) return;
                 const voices = await res.json();
                 select.innerHTML = voices.map(voice => `<option value="${voice.id}">${voice.label}</option>`).join('');
@@ -1250,7 +1284,6 @@
                     </div>`;
             });
 
-            // 剩余空地块
             const emptyCount = Math.max(0, TOTAL_PLOTS - plantedCount);
             for (let i = 0; i < emptyCount; i++) {
                 html += `
@@ -1383,7 +1416,7 @@
             executePlotPlantingAnimation(targetPlot, flowerName, traitName);
         }
 
-        function executePlotPlantingAnimation(el, flowerName, traitName) {
+        async function executePlotPlantingAnimation(el, flowerName, traitName) {
             if (el.getAttribute('data-planting') === 'true') return;
             el.setAttribute('data-planting', 'true');
             el.classList.remove('empty-plot');
@@ -1397,48 +1430,23 @@
             seedDrop.innerText = flowerIcon;
             el.appendChild(seedDrop);
 
-            // 2. 泥土飞溅与萌发
-            setTimeout(() => {
-                seedDrop.remove();
-
-                const soilPuff = document.createElement('div');
-                soilPuff.className = 'soil-puff-particle';
-                soilPuff.innerText = '💨';
-                el.appendChild(soilPuff);
-                setTimeout(() => soilPuff.remove(), 700);
-
-                el.innerHTML = `
-                    <div class="plot-plant planting-anim">
-                        <div class="plot-flower-head">${flowerIcon}</div>
-                        <div class="plot-leaves">
-                            <span class="plot-leaf-l">🍃</span>
-                            <span class="plot-leaf-r">🍃</span>
-                        </div>
-                        <div class="plot-stem"></div>
-                        <div class="plot-label">${flowerLabel}</div>
-                    </div>
-                    <div class="plot-soil-mound"></div>`;
-
-                el.onclick = () => clickFarmPlot(el, flowerName);
-
-                // 3. 飘浮得分
-                const scoreText = document.createElement('div');
-                scoreText.className = 'float-score-text';
-                scoreText.innerText = `✨ ${traitName} +10`;
-                el.appendChild(scoreText);
-                setTimeout(() => scoreText.remove(), 1500);
-
-                const bubble = document.getElementById('farmBubble');
-                bubble.innerHTML = `🎉 成功播种【${flowerName}】！<br>培养优秀【${traitName}】好品质！🌸✨`;
-
-                fetch(apiUrl('/api/chat'), {
-                    method: 'POST',
-                    headers: apiHeaders({ 'Content-Type': 'application/json' }),
-                    body: JSON.stringify({ message: `龙宝，我刚刚在农场里成功播种了【${flowerName}】！`, session_id: sessionId, user_name: childName })
-                }).then(res => res.json()).then(data => {
-                    if (data.garden) updateGardenUI(data.garden);
+            await new Promise(resolve => setTimeout(resolve, 700));
+            seedDrop.remove();
+            const bubble = document.getElementById('farmBubble');
+            try {
+                const response = await fetch(apiUrl('/api/garden/plant'), {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ trait: traitName.replace('品格', ''), user_name: childName || '' })
                 });
-            }, 700);
+                const result = await response.json();
+                if (!response.ok || result.error) throw new Error(result.error || '播种没有成功');
+                updateGardenUI(result.garden);
+                renderFarmPlots(result.garden);
+                bubble.innerHTML = `🎉 ${result.message}<br>获得 1 点成长值与 1 颗品格星星！`;
+            } catch (error) {
+                renderFarmPlots(currentGardenData);
+                bubble.innerHTML = `😿 ${error.message || '播种失败，请稍后再试。'}`;
+            }
         }
 
         function clickFarmPlot(el, name) {
@@ -1493,11 +1501,38 @@
                 setTimeout(() => {
                     closeFarm();
                     sendQuickMessage('龙宝，帮我种下一颗品格种子吧！');
-                }, 1200);
+
+}, 1200);
             }, 700);
         }
 
-        function waterAllPlots() {
+        async function handleDailyTask() {
+            const bubble = document.getElementById('farmBubble');
+            try {
+                const response = await fetch(apiUrl('/api/daily-task') + '?user_name=' + encodeURIComponent(childName || ''));
+                const result = await response.json();
+                if (!response.ok || !result.task) throw new Error('任务暂时加载不了');
+                if (result.completed) {
+                    bubble.innerHTML = '🎉 今天的品格任务已经完成！<br>明天会有新的成长挑战。';
+                    return;
+                }
+                const ready = window.confirm(`今日品格任务\n\n${result.task.description}\n\n完成后可获得 5 颗品格星星和一颗${result.task.trait}种子。现在领取奖励吗？`);
+                if (!ready) return;
+                const completed = await fetch(apiUrl('/api/daily-task/complete'), {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_name: childName || '' })
+                });
+                const reward = await completed.json();
+                if (!completed.ok || !reward.garden) throw new Error(reward.error || '奖励领取失败');
+                updateGardenUI(reward.garden);
+                renderFarmPlots(reward.garden);
+                bubble.innerHTML = `🎊 ${reward.message}`;
+            } catch (error) {
+                bubble.innerHTML = '😿 今日任务暂时加载不了，请稍后再试。';
+            }
+        }
+
+        async function waterAllPlots() {
             const can = document.getElementById('wateringCanTool');
             const bubble = document.getElementById('farmBubble');
 
@@ -1509,46 +1544,43 @@
 
             bubble.innerHTML = '💦 咕噜噜~ 浇水啦！<br>小花喝饱水快快长大！🌸✨';
 
-            // 先调后端接口
-            fetch(apiUrl('/api/water'), {
-                method: 'POST',
-                headers: apiHeaders({ 'Content-Type': 'application/json' }),
-                body: JSON.stringify({ user_name: childName || '' })
-            }).then(res => res.json()).then(garden => {
-                if (garden && garden.seeds) {
-                    currentGardenData = garden;
-                    renderFarmPlots(garden);
-                }
-            }).catch(e => console.error('Water API error:', e));
+            try {
+                const response = await fetch(apiUrl('/api/water'), {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_name: childName || '' })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.garden) throw new Error(result.error || '浇水失败');
+                updateGardenUI(result.garden);
+                renderFarmPlots(result.garden);
+                bubble.innerHTML = `💦 ${result.message}`;
+                if (result.limited || result.changed === 0) return;
+            } catch (error) {
+                bubble.innerHTML = '😿 浇水没有成功，请检查网络后再试。';
+                return;
+            }
 
-            // 流水动画
             plants.forEach((plant, i) => {
                 const plot = plant.closest('.farm-plot');
                 const rect = plot.getBoundingClientRect();
-
                 setTimeout(() => {
                     can.style.left = (rect.left + rect.width / 2 + 10) + 'px';
                     can.style.top = (rect.top - 20) + 'px';
                     can.classList.add('active');
-
                     const spray = document.createElement('div');
                     spray.className = 'water-spray';
                     spray.innerHTML = '<span class="water-drop-particle">💧</span><span class="water-drop-particle" style="animation-delay:0.2s">💧</span><span class="water-drop-particle" style="animation-delay:0.4s">💧</span>';
                     plot.appendChild(spray);
-
                     plant.style.transform = 'rotateX(-44deg) scale(1.25) translateY(-8px)';
                     plant.style.filter = 'drop-shadow(0 0 14px #4ade80)';
-
                     const heart = document.createElement('div');
                     heart.className = 'heart-float-particle';
                     heart.innerText = i % 2 === 0 ? '💖' : '🌸';
                     plot.appendChild(heart);
-
                     const score = document.createElement('div');
                     score.className = 'float-score-text';
                     score.innerText = '+1 成长';
                     plot.appendChild(score);
-
                     setTimeout(() => {
                         plant.style.transform = '';
                         plant.style.filter = '';
@@ -1565,7 +1597,7 @@
             }, plants.length * 300 + 1200);
         }
 
-        function sunlightAllPlots() {
+        async function sunlightAllPlots() {
             const overlay = document.getElementById('sunlightOverlay');
             const bubble = document.getElementById('farmBubble');
 
@@ -1577,17 +1609,21 @@
 
             bubble.innerHTML = '☀️ 暖洋洋的阳光照耀着农场！<br>植物们舒展叶片茁壮成长！🌟';
 
-            // 先调后端接口
-            fetch(apiUrl('/api/sunshine'), {
-                method: 'POST',
-                headers: apiHeaders({ 'Content-Type': 'application/json' }),
-                body: JSON.stringify({ user_name: childName || '' })
-            }).then(res => res.json()).then(garden => {
-                if (garden && garden.seeds) {
-                    currentGardenData = garden;
-                    renderFarmPlots(garden);
-                }
-            }).catch(e => console.error('Sunshine API error:', e));
+            try {
+                const response = await fetch(apiUrl('/api/sunshine'), {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_name: childName || '' })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.garden) throw new Error(result.error || '晒太阳失败');
+                updateGardenUI(result.garden);
+                renderFarmPlots(result.garden);
+                bubble.innerHTML = `☀️ ${result.message}`;
+                if (result.limited || result.changed === 0) return;
+            } catch (error) {
+                bubble.innerHTML = '😿 阳光照料没有成功，请检查网络后再试。';
+                return;
+            }
 
             overlay.classList.add('active');
 
@@ -1596,17 +1632,14 @@
                 setTimeout(() => {
                     plant.style.transform = 'rotateX(-44deg) scale(1.2) rotate(5deg)';
                     plant.style.filter = 'drop-shadow(0 0 16px #facc15)';
-
                     const star = document.createElement('div');
                     star.className = 'heart-float-particle';
                     star.innerText = '🌟';
                     plot.appendChild(star);
-
                     const score = document.createElement('div');
                     score.className = 'float-score-text';
                     score.innerText = '+1 成长';
                     plot.appendChild(score);
-
                     setTimeout(() => {
                         plant.style.transform = '';
                         plant.style.filter = '';
@@ -1622,11 +1655,11 @@
             }, 3000);
         }
 
-        function playWelcomeVoice() { playNeuralAudio('./audio/welcome.mp3', 'welcome_btn'); }
+        function playWelcomeVoice() { playNeuralAudio(resolveAudioUrl('/static/audio/welcome.mp3'), 'welcome_btn'); }
 
         async function fetchGardenData() {
             try {
-                const res = await fetch(apiUrl('/api/garden') + '?user_name=' + encodeURIComponent(childName), { headers: apiHeaders() });
+                const res = await fetch(apiUrl('/api/garden') + '?user_name=' + encodeURIComponent(childName));
                 if (res.ok) { const data = await res.json(); updateGardenUI(data); }
             } catch (e) { console.error("加载花园数据失败", e); }
         }
@@ -1636,7 +1669,10 @@
             currentGardenData = garden;
             const totalSeeds = garden.total_seeds || (garden.seeds ? garden.seeds.length : 0);
             document.getElementById('seedCountTag').innerText = `${totalSeeds} 颗种子`;
-            document.getElementById('energyFill').style.width = totalSeeds === 0 ? '0%' : `${Math.min(100, totalSeeds * 15)}%`;
+            const experience = garden.experience || 0;
+            const level = garden.level || 1;
+            document.getElementById('energyFill').style.width = `${Math.min(100, (experience % 30) / 30 * 100)}%`;
+            document.getElementById('growthMeta').innerText = `Lv.${level} · ${experience} 成长值 · ${garden.stars || 0} 颗星星`;
 
             const mc = document.getElementById('medalsContainer');
             if (garden.medals && garden.medals.length > 0) {
@@ -1690,13 +1726,13 @@
             const loadingMsg = appendLoadingMessage();
             try {
                 const response = await fetch(apiUrl('/api/chat'), {
-                    method: 'POST', headers: apiHeaders({ 'Content-Type': 'application/json' }),
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message, session_id: sessionId, voice_id: selectedVoiceId, user_name: childName })
                 });
                 const data = await response.json();
                 loadingMsg.remove();
                 if (!response.ok || data.error) { appendMessage('assistant', data.message || '龙宝暂时没连上智慧服务，请检查 API 配置后再试。'); }
-                else { sessionId = data.session_id; appendMessage('assistant', data.text, resolveApiAssetUrl(data.audio_url)); if (data.garden) updateGardenUI(data.garden); }
+                else { sessionId = data.session_id; appendMessage('assistant', data.text, data.audio_url); if (data.garden) updateGardenUI(data.garden); }
             } catch (error) { loadingMsg.remove(); appendMessage('assistant', '哎呀，网络好像出了一点小问题，请稍后再试~'); }
             messageInput.disabled = false; sendBtn.disabled = false; messageInput.focus();
         }
@@ -1707,7 +1743,7 @@
             const avatarBox = document.createElement('div');
             avatarBox.className = `msg-avatar-box ${role === 'user' ? 'user-avatar' : ''}`;
             if (role === 'user') avatarBox.innerText = '👧';
-            else avatarBox.innerHTML = `<img src="./longbao.jpg" alt="龙宝">`;
+            else avatarBox.innerHTML = `<img src="/static/longbao.jpg" alt="龙宝">`;
 
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'msg-bubble';
@@ -1716,13 +1752,14 @@
             bubbleDiv.innerHTML = formatMarkdown(cleanText);
 
             if (role === 'assistant') {
-                if (audioUrl) {
+                const resolvedAudioUrl = resolveAudioUrl(audioUrl);
+                if (resolvedAudioUrl) {
                     const btnId = 'speech_btn_' + Math.random().toString(36).substr(2, 7);
                     const voiceBar = document.createElement('div');
                     voiceBar.className = 'voice-play-bar';
-                    voiceBar.onclick = () => playNeuralAudio(audioUrl, btnId);
+                    voiceBar.onclick = () => playNeuralAudio(resolvedAudioUrl, btnId);
                     voiceBar.innerHTML = `<button id="${btnId}" class="voice-play-btn">▶ 听龙宝说话</button>`;
-                    if (isAutoplay) setTimeout(() => playNeuralAudio(audioUrl, btnId), 300);
+                    if (isAutoplay) setTimeout(() => playNeuralAudio(resolvedAudioUrl, btnId), 300);
                     bubbleDiv.appendChild(voiceBar);
                 }
 
@@ -1765,7 +1802,8 @@
             }
             if (!audioUrl) return;
             const audio = new Audio(audioUrl);
-            currentPlayingAudio = audio;
+
+currentPlayingAudio = audio;
             if (btn) {
                 btn.setAttribute('data-playing', 'true');
                 btn.innerText = '⏸️ 正在播放 (点击暂停)';
@@ -1782,7 +1820,7 @@
         function appendLoadingMessage() {
             const m = document.createElement('div');
             m.className = 'message-row assistant';
-            m.innerHTML = `<div class="msg-avatar-box"><img src="./longbao.jpg" alt="龙宝"></div>
+            m.innerHTML = `<div class="msg-avatar-box"><img src="/static/longbao.jpg" alt="龙宝"></div>
                 <div class="msg-bubble" style="color:#64748b;">龙宝思考中 💭...</div>`;
             chatMessages.appendChild(m); chatMessages.scrollTop = chatMessages.scrollHeight;
             return m;
@@ -1820,6 +1858,7 @@
             recognition.onresult = (event) => {
                 const text = event.results[0][0].transcript;
                 messageInput.value = text;
+                // 识别到文字后自动发送
                 setTimeout(() => sendMessage(), 300);
             };
 
@@ -1850,6 +1889,7 @@
             micBtn.innerText = '🎤';
             messageInput.placeholder = '和龙宝说说话，或者问龙宝讲个故事吧...';
         }
+
         /* ========== 首次访问：询问小朋友名字 ========== */
         let childName = localStorage.getItem('longbaoChildName') || '';
         const welcomeOverlay = document.getElementById('welcomeOverlay');
@@ -1889,10 +1929,10 @@
             localStorage.setItem('longbaoChildName', childName);
             closeWelcome();
 
-            // 输入名字后发送一条后台消息，让龙宝用 TTS 生成带名字的自我介绍语音
+            // 输入名字后发一条后台消息，让龙宝生成带名字的自我介绍语音
             fetch(apiUrl('/api/chat'), {
                 method: 'POST',
-                headers: apiHeaders({ 'Content-Type': 'application/json' }),
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: `你好龙宝，我是${childName}，今天第一次来找你玩！`,
                     session_id: sessionId,
@@ -1901,19 +1941,18 @@
                 })
             }).then(res => res.json()).then(data => {
                 if (data.audio_url) {
-                    // 自动播放带名字的欢迎语音
-                    playNeuralAudio(resolveApiAssetUrl(data.audio_url), 'welcome_play_btn');
+                    playNeuralAudio(resolveAudioUrl(data.audio_url), 'welcome_play_btn');
                 }
                 if (data.text) {
-                    appendMessage('assistant', data.text, resolveApiAssetUrl(data.audio_url));
+                    appendMessage('assistant', data.text, resolveAudioUrl(data.audio_url));
                 }
                 if (data.garden) updateGardenUI(data.garden);
             }).catch(() => {
-                // 后台请求失败时静默降级
                 console.warn('Welcome chat fallback');
             });
         }
 
+        // 首次访问没有名字时弹出
         if (!childName) {
             setTimeout(() => {
                 welcomeOverlay.classList.add('active');
@@ -1926,6 +1965,7 @@
         welcomeSubmit.addEventListener('click', () => saveNameAndProceed(welcomeInput.value));
         welcomeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveNameAndProceed(welcomeInput.value); });
 
+        // 欢迎弹窗语音输入
         let isWelcomeRecording = false;
         welcomeMicBtn.addEventListener('click', () => {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1956,3 +1996,5 @@
     </script>
 </body>
 </html>
+
+
