@@ -1661,14 +1661,21 @@ const ray = document.createElement('div');
             if (!farm.classList.contains('active')) openFarm();
             const bubble = document.getElementById('farmBubble');
             const modal = document.getElementById('taskModal');
+            const box = modal.querySelector('.task-modal-box');
             const titleEl = document.getElementById('taskModalTitle');
             const descEl = document.getElementById('taskModalDesc');
             const rewardEl = document.getElementById('taskModalReward');
             const acceptBtn = document.getElementById('taskModalAcceptBtn');
+            const ghostBtn = modal.querySelector('.task-modal-btn.ghost');
+            const btnRow = document.getElementById('taskModalBtnRow');
 
+            // 恢复 modal UI 到默认状态
+            box.style.cssText = '';
+            titleEl.style.cssText = ''; descEl.style.cssText = '';
+            rewardEl.style.display = ''; btnRow.style.display = '';
+            ghostBtn.style.display = ''; acceptBtn.style.display = '';
             titleEl.innerText = '龙宝正在准备今日任务…';
             descEl.innerText = '稍等一下，马上就好~ 🌸';
-            rewardEl.style.display = '';
             rewardEl.innerText = '完成可获 🌟 品格星星 + 一颗 🌱 品格种子';
             acceptBtn.disabled = true;
             acceptBtn.innerText = '准备中… ⏳';
@@ -1680,14 +1687,15 @@ const ray = document.createElement('div');
                 if (!result.task) throw new Error('任务暂时加载不了');
                 if (result.completed) {
                     closeTaskModal();
-                    bubble.innerHTML = '🎉 今天的品格任务已经完成！<br>明天会有新的成长挑战。';
+                    bubble.innerHTML = '🎉 今日品格任务已经完成啦！<br>明天再来领取新的成长挑战！';
                     return;
                 }
-                titleEl.innerText = result.task.description || '今天的亲子幸福小任务';
-                descEl.innerText = '完成后告诉龙宝并领取奖励，就能拿到闪亮小奖章！';
+                // 填充任务描述，启用完成按钮
+                titleEl.innerText = '🎯 龙宝今日任务';
+                descEl.innerText = result.task.description || '今天的亲子幸福小任务';
                 rewardEl.innerText = '完成可获 🌟×5 品格星星 + 一颗 ' + (result.task.trait || '品格') + ' 种子 🌱';
                 acceptBtn.disabled = false;
-                acceptBtn.innerText = '接受任务 🎯';
+                acceptBtn.innerText = '✅ 我完成啦！领取奖励';
                 window._pendingTask = result;
                 if (result.garden) updateGardenUI(result.garden);
             } catch (error) {
@@ -1703,14 +1711,35 @@ const ray = document.createElement('div');
             const pending = window._pendingTask;
             if (!pending || !pending.task) { closeTaskModal(); return; }
             btn.disabled = true; btn.innerText = '领取中… 🎉';
+            const modal = document.getElementById('taskModal');
+            const box = modal.querySelector('.task-modal-box');
+            const titleEl = document.getElementById('taskModalTitle');
+            const descEl = document.getElementById('taskModalDesc');
+            const rewardEl = document.getElementById('taskModalReward');
+            const btnRow = document.getElementById('taskModalBtnRow');
+            const ghostBtn = modal.querySelector('.task-modal-btn.ghost');
             const bubble = document.getElementById('farmBubble');
             try {
                 const reward = await postGardenAction('complete-daily-task');
                 if (!reward.garden) throw new Error(reward.error || '奖励领取失败');
+                // 奖励成功 → 播放庆祝动画
+                box.style.background = 'linear-gradient(135deg, #fef9c3 0%, #dbeafe 50%, #fce7f3 100%)';
+                titleEl.style.fontSize = '20px';
+                titleEl.innerText = '🎉🎉 任务完成！太棒啦！🎉🎉';
+                descEl.innerHTML = '🌟 恭喜完成亲子幸福小任务！<br>🌱 已播种 <strong>' + (reward.seed ? reward.seed.flower || pending.task.trait : pending.task.trait) + '</strong><br>⭐ 品格能量 +10  🌟 品格星星 +5';
+                rewardEl.innerText = '龙宝送你的品格种子已经种下啦 🌱✨';
+                btnRow.style.display = 'none';
+                ghostBtn.style.display = 'none';
+
                 updateGardenUI(reward.garden);
                 renderFarmPlots(reward.garden);
-                closeTaskModal();
-                bubble.innerHTML = '🎊 ' + reward.message;
+
+                // 2 秒后自动关闭 modal
+                setTimeout(() => {
+                    closeTaskModal();
+                    box.style.cssText = '';
+                    bubble.innerHTML = '🎉 ' + (reward.message || '任务完成啦！去看看农场里种的品格小花吧 🌸');
+                }, 2500);
             } catch (error) {
                 btn.disabled = false;
                 btn.innerText = '重试 🎯';
@@ -1720,10 +1749,10 @@ const ray = document.createElement('div');
         }
 
         function closeTaskModal() {
-            document.getElementById('taskModal').classList.remove('active');
+            const modal = document.getElementById('taskModal');
+            modal.classList.remove('active');
             window._pendingTask = null;
-        }
-        async function waterAllPlots() {
+        }async function waterAllPlots() {
             const can = document.getElementById('wateringCanTool');
             const bubble = document.getElementById('farmBubble');
             const waterBtn = document.querySelector('.farm-tool-btn[onclick*="waterAllPlots"]');
