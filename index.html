@@ -309,6 +309,76 @@
             padding: 12px 28px; border-radius: 50px; font-size: 15px; font-weight: 800; cursor: pointer;
         }
 
+        /* 童趣任务 modal —— 同款 overlay，糖果色包装 */
+        .task-modal-box {
+            position: relative; background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 35%, #fde7f3 100%);
+            border-radius: 32px; padding: 24px 22px 22px;
+            max-width: 420px; width: 90%; text-align: center;
+            border: 4px dashed #fdba74; box-shadow: 0 22px 50px rgba(251,146,60,0.36), inset 0 2px 6px rgba(255,255,255,0.85);
+            transform: scale(0.7) rotate(-3deg);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden; font-family: 'ZCOOL KuaiLe', 'Fredoka', 'Noto Sans SC', sans-serif;
+        }
+        .task-modal-box::before {
+            content: '✨ ⭐ ✨ ⭐ ✨'; position: absolute; top: -2px; left: 0; right: 0;
+            text-align: center; font-size: 11px; letter-spacing: 8px;
+            color: #fbbf24; opacity: 0.55; pointer-events: none;
+        }
+        .modal-overlay.active .task-modal-box { transform: scale(1) rotate(0); }
+        .task-modal-mascot {
+            width: 52px; height: 52px; margin: 0 auto 8px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #c7f9fb 0%, #38bdf8 100%);
+            border: 3px solid #fff; box-shadow: 0 6px 14px rgba(56,189,248,0.5);
+            display: flex; align-items: center; justify-content: center; font-size: 26px;
+            animation: mascotWiggle 2.5s infinite ease-in-out;
+        }
+        .task-modal-tag {
+            display: inline-block; font-size: 12px; font-weight: 800; color: #b45309;
+            background: rgba(255,255,255,0.7); padding: 4px 14px; border-radius: 99px;
+            margin-bottom: 10px; letter-spacing: 0.5px; border: 1.5px dashed #fb923c;
+        }
+        .task-modal-title {
+            font-size: 19px; font-weight: 900; color: #b45309; margin-bottom: 10px; line-height: 1.4;
+        }
+        .task-modal-desc-wrap {
+            background: rgba(255,255,255,0.6); border: 2px dashed #fcd34d; border-radius: 18px;
+            padding: 14px 14px 10px; margin-bottom: 12px;
+        }
+        .task-modal-desc { font-size: 15px; color: #92400e; line-height: 1.6; font-weight: 700; }
+        .task-modal-reward {
+            display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center;
+            background: linear-gradient(135deg, #fde68a 0%, #fbbf24 100%); color: #78350f;
+            padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 800;
+            border: 1.5px solid #f59e0b; box-shadow: 0 4px 10px rgba(251,191,36,0.35); margin-bottom: 16px;
+        }
+        .task-modal-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .task-modal-btn {
+            border: none; padding: 12px 22px; border-radius: 999px;
+            font-size: 15px; font-weight: 900; cursor: pointer;
+            font-family: 'ZCOOL KuaiLe', 'Fredoka', sans-serif; display: inline-flex; align-items: center; gap: 6px;
+            transition: all 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        .task-modal-btn.primary {
+            background: linear-gradient(135deg, #fb7185 0%, #f59e0b 100%); color: white;
+            box-shadow: 0 8px 18px rgba(244,114,182,0.45), inset 0 2px 4px rgba(255,255,255,0.4);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.18);
+        }
+        .task-modal-btn.primary:hover { transform: scale(1.05) translateY(-2px); }
+        .task-modal-btn.primary:disabled { background: linear-gradient(135deg,#cbd5e1,#94a3b8); cursor: default; box-shadow: none; text-shadow: none; transform: none; }
+        .task-modal-btn.ghost {
+            background: rgba(255,255,255,0.75); color: #6b7280;
+            border: 2px solid rgba(148,163,184,0.45);
+        }
+        .task-modal-btn.ghost:hover { background: #fff; color: #475569; transform: translateY(-2px); }
+        .task-modal-loading { color: #b45309; font-weight: 800; padding: 20px; font-size: 14px; }
+
+        /* 农场浇水/阳光次数小药丸提示（左上HUD） */
+        .farm-stat-pill.care-pill { font-size: 12px; padding: 6px 12px; }
+        .farm-stat-pill.care-pill[data-spent="true"] {
+            background: rgba(148,163,184,0.35); border-color: rgba(255,255,255,0.25); opacity: 0.78;
+        }
+        .farm-stat-pill.care-pill[data-spent="true"] .care-pill-progress { text-decoration: line-through; opacity: 0.6; }
+
         /* ==================== 2.5D 等距农场花园 ==================== */
         /* ==================== 2.5D 等距农场花园 ==================== */
         .farm-fullscreen {
@@ -926,6 +996,23 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
         </div>
     </div>
 
+    <!-- 童趣今日任务弹窗 -->
+    <div class="modal-overlay" id="taskModal" style="z-index: 100000;">
+        <div class="task-modal-box">
+            <div class="task-modal-mascot">🦕</div>
+            <span class="task-modal-tag">龙宝今日幸福小任务</span>
+            <div class="task-modal-title" id="taskModalTitle">龙宝正在准备今天的亲子任务…</div>
+            <div class="task-modal-desc-wrap">
+                <div class="task-modal-desc" id="taskModalDesc">稍等一下，马上就好~ 🌸</div>
+            </div>
+            <div class="task-modal-reward" id="taskModalReward">完成可获 🌟 品格星星 + 一颗 🌱 品格种子</div>
+            <div class="task-modal-btn-row" id="taskModalBtnRow">
+                <button class="task-modal-btn ghost" onclick="closeTaskModal()">等一下 🌙</button>
+                <button class="task-modal-btn primary" id="taskModalAcceptBtn" onclick="confirmTaskAction(this)" disabled>接受任务 🎯</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 种子仓库/背包弹窗 -->
     <div class="modal-overlay" id="seedInventoryModal" style="z-index: 99999;">
         <div class="seed-modal-box">
@@ -1032,6 +1119,8 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
             <div class="farm-stats">
                 <div class="farm-stat-pill" id="farmSeedCount">🌱 种子: 0</div>
                 <div class="farm-stat-pill" id="farmPlotCount">🌸 已种: 0/24</div>
+                <div class="farm-stat-pill care-pill" id="farmWaterCount" title="今日浇水次数">💦 <span class="care-pill-progress">0/3</span></div>
+                <div class="farm-stat-pill care-pill" id="farmSunCount" title="今日阳光次数">☀️ <span class="care-pill-progress">0/3</span></div>
                 <button class="farm-close-btn" onclick="closeFarm()">✖ 返回城堡</button>
             </div>
         </div>
@@ -1568,30 +1657,72 @@ const ray = document.createElement('div');
         }
 
         async function handleDailyTask() {
-            // 侧栏也能直接领取任务；先打开农场，确保加载状态和错误信息可见。
             const farm = document.getElementById('farmFullscreen');
             if (!farm.classList.contains('active')) openFarm();
             const bubble = document.getElementById('farmBubble');
-            bubble.innerHTML = '🎯 正在领取今日任务，请稍等一下…';
+            const modal = document.getElementById('taskModal');
+            const titleEl = document.getElementById('taskModalTitle');
+            const descEl = document.getElementById('taskModalDesc');
+            const rewardEl = document.getElementById('taskModalReward');
+            const acceptBtn = document.getElementById('taskModalAcceptBtn');
+
+            titleEl.innerText = '龙宝正在准备今日任务…';
+            descEl.innerText = '稍等一下，马上就好~ 🌸';
+            rewardEl.style.display = '';
+            rewardEl.innerText = '完成可获 🌟 品格星星 + 一颗 🌱 品格种子';
+            acceptBtn.disabled = true;
+            acceptBtn.innerText = '准备中… ⏳';
+            modal.classList.add('active');
+            bubble.innerHTML = '🎯 正在向龙宝领取今日幸福小任务…';
+
             try {
                 const result = await postGardenAction('daily-task');
                 if (!result.task) throw new Error('任务暂时加载不了');
                 if (result.completed) {
+                    closeTaskModal();
                     bubble.innerHTML = '🎉 今天的品格任务已经完成！<br>明天会有新的成长挑战。';
                     return;
                 }
-                const ready = window.confirm(`今日品格任务\n\n${result.task.description}\n\n完成后可获得 5 颗品格星星和一颗${result.task.trait}种子。现在领取奖励吗？`);
-                if (!ready) return;
+                titleEl.innerText = result.task.description || '今天的亲子幸福小任务';
+                descEl.innerText = '完成后告诉龙宝并领取奖励，就能拿到闪亮小奖章！';
+                rewardEl.innerText = '完成可获 🌟×5 品格星星 + 一颗 ' + (result.task.trait || '品格') + ' 种子 🌱';
+                acceptBtn.disabled = false;
+                acceptBtn.innerText = '接受任务 🎯';
+                window._pendingTask = result;
+                if (result.garden) updateGardenUI(result.garden);
+            } catch (error) {
+                titleEl.innerText = '😿 任务暂时拉不下来';
+                descEl.innerText = '请确认扣子后端已重新发布后再试。';
+                rewardEl.style.display = 'none';
+                acceptBtn.disabled = true;
+                acceptBtn.innerText = '稍后重试';
+            }
+        }
+
+        async function confirmTaskAction(btn) {
+            const pending = window._pendingTask;
+            if (!pending || !pending.task) { closeTaskModal(); return; }
+            btn.disabled = true; btn.innerText = '领取中… 🎉';
+            const bubble = document.getElementById('farmBubble');
+            try {
                 const reward = await postGardenAction('complete-daily-task');
                 if (!reward.garden) throw new Error(reward.error || '奖励领取失败');
                 updateGardenUI(reward.garden);
                 renderFarmPlots(reward.garden);
-                bubble.innerHTML = `🎊 ${reward.message}`;
+                closeTaskModal();
+                bubble.innerHTML = '🎊 ' + reward.message;
             } catch (error) {
-                bubble.innerHTML = '😿 今日任务暂时加载不了。<br>请确认扣子后端已重新发布后再试。';
+                btn.disabled = false;
+                btn.innerText = '重试 🎯';
+                document.getElementById('taskModalTitle').innerText = '😿 领取失败了，再试一次？';
             }
+            window._pendingTask = null;
         }
 
+        function closeTaskModal() {
+            document.getElementById('taskModal').classList.remove('active');
+            window._pendingTask = null;
+        }
         async function waterAllPlots() {
             const can = document.getElementById('wateringCanTool');
             const bubble = document.getElementById('farmBubble');
@@ -1790,6 +1921,21 @@ const ray = document.createElement('div');
                 if (spent) { btn.style.opacity = '0.55'; btn.style.cursor = 'not-allowed'; }
                 else { btn.style.opacity = ''; btn.style.cursor = ''; }
             });
+            // 同步左上角浇水/阳光次数药丸
+            const waterPill = document.getElementById('farmWaterCount');
+            const sunPill = document.getElementById('farmSunCount');
+            if (waterPill) {
+                const spent = waterUsed >= MAX_CARE_PER_DAY;
+                waterPill.setAttribute('data-spent', spent ? 'true' : 'false');
+                const prog = waterPill.querySelector('.care-pill-progress');
+                if (prog) prog.innerText = waterUsed + '/' + MAX_CARE_PER_DAY;
+            }
+            if (sunPill) {
+                const spent = sunUsed >= MAX_CARE_PER_DAY;
+                sunPill.setAttribute('data-spent', spent ? 'true' : 'false');
+                const prog = sunPill.querySelector('.care-pill-progress');
+                if (prog) prog.innerText = sunUsed + '/' + MAX_CARE_PER_DAY;
+            }
         }
 
         function updateGardenUI(garden) {
