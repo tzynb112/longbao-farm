@@ -165,26 +165,69 @@
             background: #22c55e; color: white; border: none; padding: 6px 16px;
             border-radius: 50px; font-size: 14px; font-weight: 800; cursor: pointer;
         }
+        /* 童趣任务卡 —— 绘本风格 + 圆润虚框 + 龙宝小助手 */
         .task-interactive-card {
-            margin-top: 14px; background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-            border: 2.5px solid #fdba74; border-radius: 20px; padding: 16px;
-            box-shadow: 0 6px 18px rgba(251,146,60,0.2);
+            position: relative; margin-top: 16px;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 35%, #fde7f3 100%);
+            border: 3px dashed #fdba74; border-radius: 26px; padding: 18px 18px 16px;
+            box-shadow: 0 8px 22px rgba(251,146,60,0.28), inset 0 2px 6px rgba(255,255,255,0.85);
+            overflow: hidden;
+            animation: taskCardPop 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .task-card-title { font-size: 15px; font-weight: 800; color: #ea580c; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
-        .task-interactive-card {
-            margin-top: 14px; background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-            border: 2.5px solid #fdba74; border-radius: 20px; padding: 16px;
-            box-shadow: 0 6px 18px rgba(251,146,60,0.2);
+        .task-interactive-card::before {
+            content: '✨ ⭐ ✨ ⭐ ✨'; position: absolute; top: -6px; left: 0; right: 0;
+            text-align: center; font-size: 11px; letter-spacing: 8px;
+            color: #fbbf24; opacity: 0.5; pointer-events: none;
+        }
+        .task-interactive-card::after {
+            content: '🌱 🌸 🌟 🌸 🌱'; position: absolute; bottom: 2px; left: 0; right: 0;
+            text-align: center; font-size: 11px; letter-spacing: 6px;
+            opacity: 0.55; pointer-events: none;
+        }
+        @keyframes taskCardPop {
+            0% { transform: scale(0.6) rotate(-3deg); opacity: 0; }
+            60% { transform: scale(1.06) rotate(1deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+        .task-card-header {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.7); border-radius: 20px;
+            padding: 8px 10px 8px 6px; margin-bottom: 12px;
+        }
+        .task-card-mascot {
+            width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #c7f9fb 0%, #38bdf8 100%);
+            border: 2.5px solid #fff; box-shadow: 0 4px 10px rgba(56,189,248,0.5);
+            display: flex; align-items: center; justify-content: center; font-size: 18px;
+            animation: mascotWiggle 2.5s infinite ease-in-out;
+        }
+        @keyframes mascotWiggle {
+            0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); }
+        }
+        .task-card-title {
+            font-size: 15px; font-weight: 900; color: #b45309;
+            display: flex; align-items: center; gap: 4px; flex: 1;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.7);
+        }
+        .task-card-tip {
+            font-size: 12px; color: #92400e; background: rgba(255,237,213,0.6);
+            padding: 6px 12px; border-radius: 999px; margin-bottom: 14px;
+            border: 1.5px dashed #fb923c; display: flex; align-items: center; gap: 4px;
         }
         .complete-task-btn {
-            width: 100%; margin-top: 10px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white; border: none; padding: 12px 20px; border-radius: 50px;
-            font-size: 15px; font-weight: 800; cursor: pointer;
-            box-shadow: 0 6px 18px rgba(34,197,94,0.35);
+            position: relative; z-index: 1; width: 100%; margin-top: 4px;
+            background: linear-gradient(135deg, #fb7185 0%, #f59e0b 100%);
+            color: white; border: none; padding: 14px 22px; border-radius: 999px;
+            font-size: 16px; font-weight: 900; cursor: pointer;
+            font-family: 'Fredoka', 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+            box-shadow: 0 8px 20px rgba(244,114,182,0.45), inset 0 2px 4px rgba(255,255,255,0.4);
             transition: all 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
             display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.18);
         }
-        .complete-task-btn:hover { transform: scale(1.03); box-shadow: 0 10px 24px rgba(34,197,94,0.45); }
+        .complete-task-btn:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 12px 26px rgba(244,114,182,0.55), inset 0 2px 4px rgba(255,255,255,0.5); }
+        .complete-task-btn:active { transform: scale(0.97); }
+        .complete-task-btn:disabled { background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%); cursor: default; box-shadow: none; text-shadow: none; transform: none; }
         .chat-action-chips { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
         .action-chip-btn {
             background: #f0f9ff; color: #0284c7; border: 1.5px solid #bae6fd;
@@ -1552,6 +1595,11 @@ const ray = document.createElement('div');
         async function waterAllPlots() {
             const can = document.getElementById('wateringCanTool');
             const bubble = document.getElementById('farmBubble');
+            const waterBtn = document.querySelector('.farm-tool-btn[onclick*="waterAllPlots"]');
+            if (waterBtn && waterBtn.getAttribute('data-spent') === 'true') {
+                bubble.innerHTML = '🌦️ 龙宝已经替你浇水三次啦！<br>花朵都喝得饱饱的，明天再来照顾它们吧~ 🌙';
+                return;
+            }
 
             let plants = document.querySelectorAll('.farm-plot .plot-plant');
             if (plants.length === 0) {
@@ -1561,19 +1609,41 @@ const ray = document.createElement('div');
 
             bubble.innerHTML = '💦 咕噜噜~ 浇水啦！<br>小花喝饱水快快长大！🌸✨';
 
+            let limited = false;
+            let changed = 0;
             try {
                 const result = await postGardenAction('water');
                 if (!result.garden) throw new Error(result.error || '浇水失败');
+                // 真正的上限 / 全盛开状态由后端 care_for_garden 返回；前端兜底也按 message 判一次
+                limited = !!result.limited || /已经用完|已经|用完|明天再来/.test(result.message || '');
+                changed = result.changed === undefined ? 1 : result.changed;
                 updateGardenUI(result.garden);
                 renderFarmPlots(result.garden);
                 bubble.innerHTML = `💦 ${result.message}`;
-                if (result.limited) return;
                 plants = document.querySelectorAll('.farm-plot .plot-plant');
             } catch (error) {
                 bubble.innerHTML = '😿 浇水没有成功，请检查网络后再试。';
                 return;
             }
 
+            // 达到每日上限：仍然播放一段温和的慰问动画 + 锁定按钮，避免"没反应"
+            if (limited) {
+                if (waterBtn) {
+                    waterBtn.setAttribute('data-spent', 'true');
+                    waterBtn.style.opacity = '0.55';
+                    waterBtn.style.cursor = 'not-allowed';
+                }
+                can.style.left = '50%';
+                can.style.top = '28%';
+                can.classList.add('active');
+                setTimeout(() => {
+                    can.classList.remove('active');
+                    bubble.innerHTML = '🌦️ 今天的浇水次数已经用完啦~<br>明天再来照顾它们吧！💤';
+                }, 1100);
+                return;
+            }
+
+            const bloomAll = changed === 0;
             plants.forEach((plant, i) => {
                 const plot = plant.closest('.farm-plot');
                 const rect = plot.getBoundingClientRect();
@@ -1585,15 +1655,19 @@ const ray = document.createElement('div');
                     spray.className = 'water-spray';
                     spray.innerHTML = '<span class="water-drop-particle">💧</span><span class="water-drop-particle" style="animation-delay:0.2s">💧</span><span class="water-drop-particle" style="animation-delay:0.4s">💧</span>';
                     plot.appendChild(spray);
-                    plant.style.transform = 'rotateX(-44deg) scale(1.25) translateY(-8px)';
-                    plant.style.filter = 'drop-shadow(0 0 14px #4ade80)';
+                    if (bloomAll) {
+                        plant.style.transform = 'rotateX(-44deg) scale(1.08) translateY(-4px)';
+                    } else {
+                        plant.style.transform = 'rotateX(-44deg) scale(1.25) translateY(-8px)';
+                        plant.style.filter = 'drop-shadow(0 0 14px #4ade80)';
+                    }
                     const heart = document.createElement('div');
                     heart.className = 'heart-float-particle';
                     heart.innerText = i % 2 === 0 ? '💖' : '🌸';
                     plot.appendChild(heart);
                     const score = document.createElement('div');
                     score.className = 'float-score-text';
-                    score.innerText = '+1 成长';
+                    score.innerText = bloomAll ? '🌸 已盛开' : '+1 成长';
                     plot.appendChild(score);
                     setTimeout(() => {
                         plant.style.transform = '';
@@ -1614,6 +1688,11 @@ const ray = document.createElement('div');
         async function sunlightAllPlots() {
             const overlay = document.getElementById('sunlightOverlay');
             const bubble = document.getElementById('farmBubble');
+            const sunBtn = document.querySelector('.farm-tool-btn[onclick*="sunlightAllPlots"]');
+            if (sunBtn && sunBtn.getAttribute('data-spent') === 'true') {
+                bubble.innerHTML = '🌙 今天的阳光已经晒过啦！<br>花朵们吃饱了温暖，明天再来给它们晒吧~';
+                return;
+            }
 
             let plants = document.querySelectorAll('.farm-plot .plot-plant');
             if (plants.length === 0) {
@@ -1623,33 +1702,55 @@ const ray = document.createElement('div');
 
             bubble.innerHTML = '☀️ 暖洋洋的阳光照耀着农场！<br>植物们舒展叶片茁壮成长！🌟';
 
+            let limited = false;
+            let changed = 0;
             try {
                 const result = await postGardenAction('sunshine');
                 if (!result.garden) throw new Error(result.error || '晒太阳失败');
+                limited = !!result.limited || /已经用完|已经|用完|明天再来/.test(result.message || '');
+                changed = result.changed === undefined ? 1 : result.changed;
                 updateGardenUI(result.garden);
                 renderFarmPlots(result.garden);
                 bubble.innerHTML = `☀️ ${result.message}`;
-                if (result.limited) return;
                 plants = document.querySelectorAll('.farm-plot .plot-plant');
             } catch (error) {
                 bubble.innerHTML = '😿 阳光照料没有成功，请检查网络后再试。';
                 return;
             }
 
+            // 总是激活阳光覆盖层 —— 避免"什么都没发生"的卡顿感
             overlay.classList.add('active');
 
+            if (limited) {
+                if (sunBtn) {
+                    sunBtn.setAttribute('data-spent', 'true');
+                    sunBtn.style.opacity = '0.55';
+                    sunBtn.style.cursor = 'not-allowed';
+                }
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                    bubble.innerHTML = '🌙 今天的阳光已经晒够啦~<br>明早再让它们晒太阳吧！';
+                }, 1500);
+                return;
+            }
+
+            const bloomAll = changed === 0;
             plants.forEach((plant, i) => {
                 const plot = plant.closest('.farm-plot');
                 setTimeout(() => {
-                    plant.style.transform = 'rotateX(-44deg) scale(1.2) rotate(5deg)';
-                    plant.style.filter = 'drop-shadow(0 0 16px #facc15)';
+                    if (bloomAll) {
+                        plant.style.transform = 'rotateX(-44deg) scale(1.08) rotate(3deg)';
+                    } else {
+                        plant.style.transform = 'rotateX(-44deg) scale(1.2) rotate(5deg)';
+                        plant.style.filter = 'drop-shadow(0 0 16px #facc15)';
+                    }
                     const star = document.createElement('div');
                     star.className = 'heart-float-particle';
                     star.innerText = '🌟';
                     plot.appendChild(star);
                     const score = document.createElement('div');
                     score.className = 'float-score-text';
-                    score.innerText = '+1 成长';
+                    score.innerText = bloomAll ? '🌸 已盛开' : '+1 成长';
                     plot.appendChild(score);
                     setTimeout(() => {
                         plant.style.transform = '';
@@ -1660,10 +1761,11 @@ const ray = document.createElement('div');
                 }, i * 150);
             });
 
+            const animDuration = Math.max(3000, plants.length * 150 + 1300);
             setTimeout(() => {
                 overlay.classList.remove('active');
                 bubble.innerHTML = '欢迎来到龙宝农场！🌾<br>点击空地块种花，点击花朵看成就！';
-            }, 3000);
+            }, animDuration);
         }
 
         function playWelcomeVoice() { playNeuralAudio('./audio/welcome.mp3', 'welcome_btn'); }
@@ -1675,9 +1777,25 @@ const ray = document.createElement('div');
             } catch (e) { console.error("加载花园数据失败", e); }
         }
 
+        const MAX_CARE_PER_DAY = 3;
+        function syncFarmToolButtons(garden) {
+            const waterBtn = document.querySelector('.farm-tool-btn[onclick*="waterAllPlots"]');
+            const sunBtn = document.querySelector('.farm-tool-btn[onclick*="sunlightAllPlots"]');
+            const waterUsed = garden && garden.care_actions && Number(garden.care_actions.water) || 0;
+            const sunUsed = garden && garden.care_actions && Number(garden.care_actions.sun) || 0;
+            [[waterBtn, waterUsed], [sunBtn, sunUsed]].forEach(([btn, used]) => {
+                if (!btn) return;
+                const spent = used >= MAX_CARE_PER_DAY;
+                btn.setAttribute('data-spent', spent ? 'true' : 'false');
+                if (spent) { btn.style.opacity = '0.55'; btn.style.cursor = 'not-allowed'; }
+                else { btn.style.opacity = ''; btn.style.cursor = ''; }
+            });
+        }
+
         function updateGardenUI(garden) {
             if (!garden) return;
             currentGardenData = garden;
+            syncFarmToolButtons(garden);
             const totalSeeds = garden.total_seeds || (garden.seeds ? garden.seeds.length : 0);
             document.getElementById('seedCountTag').innerText = `${totalSeeds} 颗种子`;
             const experience = garden.experience || 0;
@@ -1777,8 +1895,14 @@ const ray = document.createElement('div');
                 if (cleanText.includes('任务') || cleanText.includes('小管家') || cleanText.includes('一起完成')) {
                     const taskCard = document.createElement('div');
                     taskCard.className = 'task-interactive-card';
-                    taskCard.innerHTML = `<div class="task-card-title">🎯 亲子幸福小任务进行中</div>
-                        <button class="complete-task-btn" onclick="completeTaskAction(this)">✅ 我已完成任务！(点击领奖章)</button>`;
+                    taskCard.innerHTML = `<div class="task-card-header">
+                            <div class="task-card-mascot">🦕</div>
+                            <div class="task-card-title">🎯 龙宝幸福小任务</div>
+                        </div>
+                        <div class="task-card-tip">💡 完成后告诉龙宝，就能拿到闪亮小奖章哦！</div>
+                        <button class="complete-task-btn" onclick="completeTaskAction(this)">
+                            <span>✅</span><span>我做到啦！点击领奖章</span><span>🎉</span>
+                        </button>`;
                     bubbleDiv.appendChild(taskCard);
                 }
                 const chipsDiv = document.createElement('div');
