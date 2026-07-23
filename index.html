@@ -1261,13 +1261,15 @@ const ray = document.createElement('div');
         ];
 
         function requestDailyTaskFromLongbao() {
-            const prompt = '龙宝，请给我布置今天的亲子幸福小任务吧！';
-            const today = new Date().toISOString().slice(0, 10);
-            const challengeIndex = [...today].reduce((sum, char) => sum + char.charCodeAt(0), 0) % PARENT_CHILD_CHALLENGES.length;
-            appendMessage('user', prompt);
-            setTimeout(() => {
-                appendMessage('assistant', `当然可以呀！今天的亲子幸福小挑战是：${PARENT_CHILD_CHALLENGES[challengeIndex]}\n\n完成后回来告诉龙宝，我会为你喝彩！`);
-            }, 280);
+            postGardenAction('daily-task', { user_name: childName || '' }).then(data => {
+                if (data.task) {
+                    appendMessage('assistant', `🎯 今日亲子幸福小任务：\n\n${data.task.description}\n\n完成后告诉龙宝，龙宝给你颁奖章！✨`);
+                    if (data.garden) updateGardenUI(data.garden);
+                }
+            }).catch(e => {
+                appendMessage('assistant', '龙宝暂时拿不到任务～先聊聊天吧！');
+                console.error(e);
+            });
         }
 
         /* ===== 2.5D 农场 ===== */
