@@ -1097,7 +1097,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
                     <div class="magic-icon">🏡</div>
                     <div class="magic-text"><h4>品格农场</h4><p>2.5D 等距种花园</p></div>
                 </div>
-                <div class="magic-card" onclick="handleDailyTask()">
+                <div class="magic-card" onclick="requestDailyTaskFromLongbao()">
                     <div class="magic-icon">🎯</div>
                     <div class="magic-text"><h4>幸福小管家</h4><p>领取亲子任务</p></div>
                 </div>
@@ -1250,6 +1250,10 @@ const ray = document.createElement('div');
             else if (text.includes('故事')) messageInput.value = "龙宝，给小朋友讲一个好听的故事吧！";
             else messageInput.value = text;
             sendMessage();
+        }
+
+        function requestDailyTaskFromLongbao() {
+            sendQuickMessage('龙宝，请给我布置今天的亲子幸福小任务吧！');
         }
 
         /* ===== 2.5D 农场 ===== */
