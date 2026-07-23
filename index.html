@@ -1219,44 +1219,39 @@
         function renderFarmPlots(garden) {
             const field = document.getElementById('farmField');
             const seeds = (garden && garden.seeds) ? garden.seeds : [];
-
-            // 按品格归类
-            const groups = {};
-            seeds.forEach(s => {
-                const name = s.flower || s.trait || '🌸 美丽之花';
-                if (!groups[name]) groups[name] = { count: 0 };
-                groups[name].count++;
-            });
-
-            const planted = Object.keys(groups);
             const plantedCount = seeds.length;
 
             document.getElementById('farmSeedCount').innerText = `🌱 种子: ${seeds.length}`;
             document.getElementById('farmPlotCount').innerText = `🌸 已种: ${plantedCount}/${TOTAL_PLOTS}`;
 
+            const GROWTH_ICONS = ['🌱', '🌿', '🍃', '🌸'];
+            const GROWTH_LABELS = ['小种子', '发芽了', '长叶子', '已开花'];
+
             let html = '';
-            // 先放有花的地块
-            planted.forEach(name => {
+            seeds.forEach((seed, idx) => {
+                const name = seed.flower || seed.trait || '🌸 美丽之花';
                 const profile = getFlowerProfile(name);
-                const count = groups[name].count;
+                const progress = Math.min(seed.growth_progress ?? 3, 3);
+                const growthIcon = GROWTH_ICONS[progress];
+                const growthLabel = GROWTH_LABELS[progress];
+                const displayIcon = progress >= 3 ? profile.icon : growthIcon;
                 html += `
                     <div class="farm-plot" onclick="clickFarmPlot(this, '${name}')" title="点击查看${profile.achievement}">
-                        ${count > 1 ? `<div class="plot-count-badge">×${count}</div>` : ''}
                         <div class="plot-plant">
-                            <div class="plot-flower-head">${profile.icon}</div>
-                            <div class="plot-leaves">
-                                <span class="plot-leaf-l">🍃</span>
-                                <span class="plot-leaf-r">🍃</span>
-                            </div>
+                            <div class="plot-flower-head" style="font-size:${progress >= 3 ? '38px' : '28px'};">${displayIcon}</div>
+                            ${progress < 3 ? `<div class="plot-leaves"><span class="plot-leaf-l">🍃</span><span class="plot-leaf-r">🍃</span></div>` : ''}
                             <div class="plot-stem"></div>
-                            <div class="plot-label">${profile.trait}</div>
+                            <div class="plot-label" style="font-size:10px;">${progress >= 3 ? profile.trait : growthLabel}</div>
                         </div>
                         <div class="plot-soil-mound"></div>
+                        <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:9px;color:rgba(255,255,255,0.7);background:rgba(0,0,0,0.4);padding:1px 6px;border-radius:8px;white-space:nowrap;">
+                            💧${seed.water_count ?? 0} ☀${seed.sun_count ?? 0}
+                        </div>
                     </div>`;
             });
 
             // 剩余空地块
-            const emptyCount = TOTAL_PLOTS - plantedCount;
+            const emptyCount = Math.max(0, TOTAL_PLOTS - plantedCount);
             for (let i = 0; i < emptyCount; i++) {
                 html += `
                     <div class="farm-plot empty-plot" onclick="openSeedInventory(this)">
@@ -1505,32 +1500,42 @@
         function waterAllPlots() {
             const can = document.getElementById('wateringCanTool');
             const bubble = document.getElementById('farmBubble');
-            bubble.innerHTML = '💦 咕噜噜~ 3D 水壶浇水啦！<br>鲜花喝饱水，品格能量 +20！🌸✨';
 
             const plants = document.querySelectorAll('.farm-plot .plot-plant');
             if (plants.length === 0) {
-                bubble.innerHTML = '🌱 农场里还没有花朵呢！<br>点击空地块先种一棵吧！';
+                bubble.innerHTML = '🌱 农场里还没有种子呢！<br>点击空地块先种一颗吧！';
                 return;
             }
 
-            // 依次给有花的地块浇水
+            bubble.innerHTML = '💦 咕噜噜~ 浇水啦！<br>小花喝饱水快快长大！🌸✨';
+
+            // 先调后端接口
+            fetch(apiUrl('/api/water'), {
+                method: 'POST',
+                headers: apiHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({ user_name: childName || '' })
+            }).then(res => res.json()).then(garden => {
+                if (garden && garden.seeds) {
+                    currentGardenData = garden;
+                    renderFarmPlots(garden);
+                }
+            }).catch(e => console.error('Water API error:', e));
+
+            // 流水动画
             plants.forEach((plant, i) => {
                 const plot = plant.closest('.farm-plot');
                 const rect = plot.getBoundingClientRect();
 
                 setTimeout(() => {
-                    // 移动水壶到当前地块上方
                     can.style.left = (rect.left + rect.width / 2 + 10) + 'px';
                     can.style.top = (rect.top - 20) + 'px';
                     can.classList.add('active');
 
-                    // 生成喷水粒子
                     const spray = document.createElement('div');
                     spray.className = 'water-spray';
                     spray.innerHTML = '<span class="water-drop-particle">💧</span><span class="water-drop-particle" style="animation-delay:0.2s">💧</span><span class="water-drop-particle" style="animation-delay:0.4s">💧</span>';
                     plot.appendChild(spray);
 
-                    // 花朵欢跃 + 悬浮爱心
                     plant.style.transform = 'rotateX(-44deg) scale(1.25) translateY(-8px)';
                     plant.style.filter = 'drop-shadow(0 0 14px #4ade80)';
 
@@ -1541,7 +1546,7 @@
 
                     const score = document.createElement('div');
                     score.className = 'float-score-text';
-                    score.innerText = '+20 滋润';
+                    score.innerText = '+1 成长';
                     plot.appendChild(score);
 
                     setTimeout(() => {
@@ -1554,7 +1559,6 @@
                 }, i * 300);
             });
 
-            // 恢复水壶
             setTimeout(() => {
                 can.classList.remove('active');
                 bubble.innerHTML = '欢迎来到龙宝农场！🌾<br>点击空地块种花，点击花朵看成就！';
@@ -1564,11 +1568,29 @@
         function sunlightAllPlots() {
             const overlay = document.getElementById('sunlightOverlay');
             const bubble = document.getElementById('farmBubble');
-            bubble.innerHTML = '☀️ 暖洋洋的阳光照耀着农场！<br>鲜花舒展叶片，吸收阳光 +15！🌟';
+
+            const plants = document.querySelectorAll('.farm-plot .plot-plant');
+            if (plants.length === 0) {
+                bubble.innerHTML = '🌱 农场里还没有种子呢！<br>点击空地块先种一颗吧！';
+                return;
+            }
+
+            bubble.innerHTML = '☀️ 暖洋洋的阳光照耀着农场！<br>植物们舒展叶片茁壮成长！🌟';
+
+            // 先调后端接口
+            fetch(apiUrl('/api/sunshine'), {
+                method: 'POST',
+                headers: apiHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({ user_name: childName || '' })
+            }).then(res => res.json()).then(garden => {
+                if (garden && garden.seeds) {
+                    currentGardenData = garden;
+                    renderFarmPlots(garden);
+                }
+            }).catch(e => console.error('Sunshine API error:', e));
 
             overlay.classList.add('active');
 
-            const plants = document.querySelectorAll('.farm-plot .plot-plant');
             plants.forEach((plant, i) => {
                 const plot = plant.closest('.farm-plot');
                 setTimeout(() => {
@@ -1582,7 +1604,7 @@
 
                     const score = document.createElement('div');
                     score.className = 'float-score-text';
-                    score.innerText = '+15 阳光';
+                    score.innerText = '+1 成长';
                     plot.appendChild(score);
 
                     setTimeout(() => {
