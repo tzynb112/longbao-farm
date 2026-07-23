@@ -724,7 +724,7 @@
         @media (max-width: 760px) {
             body { padding: 8px; align-items: flex-start; }
             .app-castle { width: 100%; max-width: none; height: calc(100vh - 16px); border-radius: 24px; }
-            .header-bar { padding: 10px 12px; gap: 8px; align-items: flex-start; }
+            .header-bar { padding: 10px 12px; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
             .header-brand { gap: 9px; min-width: 0; }
             .avatar-frame { width: 52px; height: 52px; }
             .brand-titles { min-width: 0; }
@@ -756,7 +756,7 @@
             .farm-stats { gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
             .farm-stat-pill { padding: 6px 8px; font-size: 10px; }
             .farm-close-btn { padding: 7px 9px; font-size: 11px; }
-            .child-name-tag { top: auto; bottom: -28px; right: 8px; font-size: 11px; padding: 2px 8px; }
+            .child-name-tag { font-size: 11px; padding: 2px 8px; }
             .farm-drag-hint { top: 74px; font-size: 10px; }
             .farm-toolbar { width: calc(100% - 20px); bottom: 10px; padding: 8px; }
             .farm-tool-btn { padding: 8px 10px; font-size: 11px; }
@@ -816,10 +816,10 @@
         .welcome-submit:hover { transform: translateY(-2px) scale(1.03); }
         .welcome-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .child-name-tag {
-            position: absolute; top: 14px; right: 18px; z-index: 10;
             background: rgba(255,255,255,0.9); border: 2px solid #bae6fd;
             padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 700;
-            color: #0284c7; cursor: pointer; backdrop-filter: blur(10px);
+            color: #0284c7; cursor: pointer; backdrop-filter: blur(10px); white-space: nowrap;
+            flex-shrink: 0;
         }
         .child-name-tag:hover { background: #fff; border-color: #38bdf8; }
     </style>
@@ -985,6 +985,7 @@
                     <p>来自自贡恐龙之乡的温暖伙伴 ✨</p>
                 </div>
             </div>
+            <div class="child-name-tag" id="childNameTag" style="display:none;" title="点击修改名字"></div>
             <div class="audio-controls">
                 <div class="audio-switch" onclick="toggleAutoplay()">
                     <span id="audioIcon">🔊</span>
@@ -1090,7 +1091,7 @@
             if (!assetUrl || /^(https?:|data:|blob:)/i.test(assetUrl)) return assetUrl;
             return new URL(assetUrl, API_BASE_URL).toString();
         };
-        let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'warm_female';
+        let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'cute_boy';
         const TOTAL_PLOTS = 24;
         const chatMessages = document.getElementById('chatMessages');
         const messageInput = document.getElementById('messageInput');
@@ -1835,21 +1836,17 @@
         const welcomeSubmit = document.getElementById('welcomeSubmit');
 
         function showChildNameTag() {
-            let tag = document.getElementById('childNameTag');
-            if (!tag) {
-                tag = document.createElement('div');
-                tag.id = 'childNameTag';
-                tag.className = 'child-name-tag';
-                tag.title = '点击修改名字';
+            const tag = document.getElementById('childNameTag');
+            if (tag) {
+                tag.innerText = '👋 ' + childName;
+                tag.style.display = '';
                 tag.onclick = () => {
                     if (confirm('要换成另一个小朋友吗？')) {
                         localStorage.removeItem('longbaoChildName');
                         location.reload();
                     }
                 };
-                document.querySelector('.header-bar').appendChild(tag);
             }
-            tag.innerText = '👋 ' + childName;
         }
 
         function closeWelcome() {
