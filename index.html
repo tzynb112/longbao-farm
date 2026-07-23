@@ -1119,6 +1119,17 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
             if (API_BASE_URL) return `${API_BASE_URL.replace(/\/$/, '')}${url}`;
             return url;
         };
+        // 与聊天共用唯一已由部署网关放行的入口，防止农场独立接口被云端拦截。
+        async function postGardenAction(gardenAction, payload = {}) {
+            const response = await fetch(apiUrl('/api/chat'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ garden_action: gardenAction, user_name: childName || '', ...payload })
+            });
+            const result = await response.json();
+            if (!response.ok || result.error) throw new Error(result.error || '农场暂时无法处理这个动作');
+            return result;
+        }
 
         let sessionId = localStorage.getItem('longbao_session_id') || 'session_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('longbao_session_id', sessionId);
@@ -1434,12 +1445,7 @@ const ray = document.createElement('div');
             seedDrop.remove();
             const bubble = document.getElementById('farmBubble');
             try {
-                const response = await fetch(apiUrl('/api/garden/plant'), {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ trait: traitName.replace('品格', ''), user_name: childName || '' })
-                });
-                const result = await response.json();
-                if (!response.ok || result.error) throw new Error(result.error || '播种没有成功');
+                const result = await postGardenAction('plant', { trait: traitName.replace('品格', '') });
                 updateGardenUI(result.garden);
                 renderFarmPlots(result.garden);
                 bubble.innerHTML = `🎉 ${result.message}<br>获得 1 点成长值与 1 颗品格星星！`;
@@ -1513,21 +1519,16 @@ const ray = document.createElement('div');
             const bubble = document.getElementById('farmBubble');
             bubble.innerHTML = '🎯 正在领取今日任务，请稍等一下…';
             try {
-                const response = await fetch(apiUrl('/api/daily-task') + '?user_name=' + encodeURIComponent(childName || ''));
-                const result = await response.json();
-                if (!response.ok || !result.task) throw new Error('任务暂时加载不了');
+                const result = await postGardenAction('daily-task');
+                if (!result.task) throw new Error('任务暂时加载不了');
                 if (result.completed) {
                     bubble.innerHTML = '🎉 今天的品格任务已经完成！<br>明天会有新的成长挑战。';
                     return;
                 }
                 const ready = window.confirm(`今日品格任务\n\n${result.task.description}\n\n完成后可获得 5 颗品格星星和一颗${result.task.trait}种子。现在领取奖励吗？`);
                 if (!ready) return;
-                const completed = await fetch(apiUrl('/api/daily-task/complete'), {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_name: childName || '' })
-                });
-                const reward = await completed.json();
-                if (!completed.ok || !reward.garden) throw new Error(reward.error || '奖励领取失败');
+                const reward = await postGardenAction('complete-daily-task');
+                if (!reward.garden) throw new Error(reward.error || '奖励领取失败');
                 updateGardenUI(reward.garden);
                 renderFarmPlots(reward.garden);
                 bubble.innerHTML = `🎊 ${reward.message}`;
@@ -1540,7 +1541,7 @@ const ray = document.createElement('div');
             const can = document.getElementById('wateringCanTool');
             const bubble = document.getElementById('farmBubble');
 
-            const plants = document.querySelectorAll('.farm-plot .plot-plant');
+            let plants = document.querySelectorAll('.farm-plot .plot-plant');
             if (plants.length === 0) {
                 bubble.innerHTML = '🌱 农场里还没有种子呢！<br>点击空地块先种一颗吧！';
                 return;
@@ -1549,16 +1550,13 @@ const ray = document.createElement('div');
             bubble.innerHTML = '💦 咕噜噜~ 浇水啦！<br>小花喝饱水快快长大！🌸✨';
 
             try {
-                const response = await fetch(apiUrl('/api/water'), {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_name: childName || '' })
-                });
-                const result = await response.json();
-                if (!response.ok || !result.garden) throw new Error(result.error || '浇水失败');
+                const result = await postGardenAction('water');
+                if (!result.garden) throw new Error(result.error || '浇水失败');
                 updateGardenUI(result.garden);
                 renderFarmPlots(result.garden);
                 bubble.innerHTML = `💦 ${result.message}`;
                 if (result.limited || result.changed === 0) return;
+                plants = document.querySelectorAll('.farm-plot .plot-plant');
             } catch (error) {
                 bubble.innerHTML = '😿 浇水没有成功，请检查网络后再试。';
                 return;
@@ -1605,7 +1603,7 @@ const ray = document.createElement('div');
             const overlay = document.getElementById('sunlightOverlay');
             const bubble = document.getElementById('farmBubble');
 
-            const plants = document.querySelectorAll('.farm-plot .plot-plant');
+            let plants = document.querySelectorAll('.farm-plot .plot-plant');
             if (plants.length === 0) {
                 bubble.innerHTML = '🌱 农场里还没有种子呢！<br>点击空地块先种一颗吧！';
                 return;
@@ -1614,16 +1612,13 @@ const ray = document.createElement('div');
             bubble.innerHTML = '☀️ 暖洋洋的阳光照耀着农场！<br>植物们舒展叶片茁壮成长！🌟';
 
             try {
-                const response = await fetch(apiUrl('/api/sunshine'), {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_name: childName || '' })
-                });
-                const result = await response.json();
-                if (!response.ok || !result.garden) throw new Error(result.error || '晒太阳失败');
+                const result = await postGardenAction('sunshine');
+                if (!result.garden) throw new Error(result.error || '晒太阳失败');
                 updateGardenUI(result.garden);
                 renderFarmPlots(result.garden);
                 bubble.innerHTML = `☀️ ${result.message}`;
                 if (result.limited || result.changed === 0) return;
+                plants = document.querySelectorAll('.farm-plot .plot-plant');
             } catch (error) {
                 bubble.innerHTML = '😿 阳光照料没有成功，请检查网络后再试。';
                 return;
@@ -1663,8 +1658,8 @@ const ray = document.createElement('div');
 
         async function fetchGardenData() {
             try {
-                const res = await fetch(apiUrl('/api/garden') + '?user_name=' + encodeURIComponent(childName));
-                if (res.ok) { const data = await res.json(); updateGardenUI(data); }
+                const data = await postGardenAction('daily-task');
+                if (data.garden) updateGardenUI(data.garden);
             } catch (e) { console.error("加载花园数据失败", e); }
         }
 
