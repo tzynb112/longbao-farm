@@ -1252,8 +1252,22 @@ const ray = document.createElement('div');
             sendMessage();
         }
 
+        const PARENT_CHILD_CHALLENGES = [
+            '和爸爸妈妈一起收好 5 样玩具，再给彼此一个拥抱。',
+            '帮家人做一件力所能及的小事，并认真说一声“谢谢”。',
+            '和爸爸妈妈轮流说出今天最开心的一件事，认真倾听对方。',
+            '一起读 10 分钟绘本，选一句喜欢的话分享给家人。',
+            '给家人一个暖心夸奖，说说你欣赏他（她）的地方。'
+        ];
+
         function requestDailyTaskFromLongbao() {
-            sendQuickMessage('龙宝，请给我布置今天的亲子幸福小任务吧！');
+            const prompt = '龙宝，请给我布置今天的亲子幸福小任务吧！';
+            const today = new Date().toISOString().slice(0, 10);
+            const challengeIndex = [...today].reduce((sum, char) => sum + char.charCodeAt(0), 0) % PARENT_CHILD_CHALLENGES.length;
+            appendMessage('user', prompt);
+            setTimeout(() => {
+                appendMessage('assistant', `当然可以呀！今天的亲子幸福小挑战是：${PARENT_CHILD_CHALLENGES[challengeIndex]}\n\n完成后回来告诉龙宝，我会为你喝彩！`);
+            }, 280);
         }
 
         /* ===== 2.5D 农场 ===== */
