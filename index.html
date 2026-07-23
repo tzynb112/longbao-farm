@@ -204,6 +204,24 @@
         }
         .send-btn-kid:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 26px rgba(255,112,67,0.45); }
         .send-btn-kid:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+        .mic-btn {
+            width: 50px; height: 50px; border-radius: 50%; border: 3px solid #cbd5e1;
+            background: #fff; cursor: pointer; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .mic-btn:hover { border-color: #38bdf8; transform: scale(1.08); }
+        .mic-btn.recording {
+            border-color: #ef4444; background: #fef2f2;
+            animation: micPulse 1s ease-in-out infinite;
+            box-shadow: 0 0 0 6px rgba(239,68,68,0.2);
+        }
+        .mic-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        @keyframes micPulse {
+            0%, 100% { box-shadow: 0 0 0 4px rgba(239,68,68,0.2); }
+            50% { box-shadow: 0 0 0 12px rgba(239,68,68,0.08); }
+        }
         .feature-sidebar {
             width: 260px; background: linear-gradient(180deg, #fefce8 0%, #fff7ed 100%);
             border-left: 3px solid #fed7aa; padding: 20px;
@@ -728,8 +746,9 @@
             .message-row { max-width: 96%; gap: 8px; }
             .msg-avatar-box { width: 38px; height: 38px; }
             .msg-bubble { padding: 12px 14px; font-size: 14px; line-height: 1.5; }
-            .chat-input-box { padding: 8px; gap: 8px; }
-            .send-btn-kid { padding: 10px 14px; }
+            .chat-input-box { padding: 8px; gap: 6px; }
+            .send-btn-kid { padding: 10px 14px; font-size: 14px; }
+            .mic-btn { width: 42px; height: 42px; font-size: 18px; }
             .feature-sidebar { display: none; }
             .farm-header { padding: 12px; align-items: flex-start; }
             .farm-title-text h2 { font-size: 18px; }
@@ -957,6 +976,7 @@
                 </div>
                 <div class="chat-input-box">
                     <input type="text" id="messageInput" placeholder="和龙宝说说话，或者问龙宝讲个故事吧..." onkeypress="handleKeyPress(event)">
+                    <button class="mic-btn" id="micBtn" onclick="startVoiceInput()" title="按住说话">🎤</button>
                     <button class="send-btn-kid" id="sendBtn" onclick="sendMessage()"><span>发送</span> 🚀</button>
                 </div>
             </div>
@@ -1679,6 +1699,65 @@
         function formatMarkdown(text) {
             if (!text) return '';
             return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+        }
+
+        /* ===== 语音输入（语音识别，面向不会打字的小朋友） ===== */
+        let isRecording = false;
+        let recognition = null;
+
+        function startVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                appendMessage('assistant', '当前浏览器不支持语音输入，请用 Chrome 或 Edge 浏览器打开哦～');
+                return;
+            }
+            if (isRecording) return;
+
+            recognition = new SpeechRecognition();
+            recognition.lang = 'zh-CN';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                document.getElementById('micBtn').classList.add('recording');
+                document.getElementById('micBtn').innerText = '🔴';
+                messageInput.placeholder = '龙宝听着呢，说吧...';
+            };
+
+            recognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                messageInput.value = text;
+                setTimeout(() => sendMessage(), 300);
+            };
+
+            recognition.onerror = (event) => {
+                console.error('语音识别错误:', event.error);
+                if (event.error === 'not-allowed') {
+                    appendMessage('assistant', '龙宝没有找到麦克风权限呢～请让妈妈在浏览器设置里打开麦克风开关哦！🔇');
+                }
+                stopVoiceInput();
+            };
+
+            recognition.onend = () => {
+                stopVoiceInput();
+            };
+
+            try {
+                recognition.start();
+            } catch (e) {
+                console.error('语音启动失败:', e);
+                stopVoiceInput();
+            }
+        }
+
+        function stopVoiceInput() {
+            isRecording = false;
+            const micBtn = document.getElementById('micBtn');
+            micBtn.classList.remove('recording');
+            micBtn.innerText = '🎤';
+            messageInput.placeholder = '和龙宝说说话，或者问龙宝讲个故事吧...';
         }
     </script>
 </body>
