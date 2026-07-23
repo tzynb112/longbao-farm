@@ -1115,7 +1115,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
         const apiUrl = (path) => API_BASE_URL ? `${API_BASE_URL.replace(/\/$/, '')}${path}` : path;
         const resolveAudioUrl = (url) => {
             if (!url) return url;
-            if (/^(https?:|data:|blob:|\.\/)/i.test(url)) return url;
+            if (/^(https?:|data:|blob:|\.\/|\/)/i.test(url)) return url;
             if (API_BASE_URL) return `${API_BASE_URL.replace(/\/$/, '')}${url}`;
             return url;
         };
@@ -1996,4 +1996,3 @@ currentPlayingAudio = audio;
     </script>
 </body>
 </html>
-
