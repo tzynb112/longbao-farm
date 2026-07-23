@@ -1499,7 +1499,7 @@
             currentGardenData = garden;
             const totalSeeds = garden.total_seeds || (garden.seeds ? garden.seeds.length : 0);
             document.getElementById('seedCountTag').innerText = `${totalSeeds} 颗种子`;
-            document.getElementById('energyFill').style.width = `${Math.min(100, Math.max(15, totalSeeds * 15))}%`;
+            document.getElementById('energyFill').style.width = totalSeeds === 0 ? '0%' : `${Math.min(100, totalSeeds * 15)}%`;
 
             const mc = document.getElementById('medalsContainer');
             if (garden.medals && garden.medals.length > 0) {
