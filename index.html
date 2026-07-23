@@ -1908,8 +1908,15 @@ const ray = document.createElement('div');
             } catch (e) { console.error("加载花园数据失败", e); }
         }
 
-        const MAX_CARE_PER_DAY = 3;
+        function _carePerDayFromGarden(garden) {
+            // 优先取后端 garden.max_care_per_day；否则按等级算 Lv.1=2, Lv.5+ = 6
+            if (garden && garden.max_care_per_day) return Number(garden.max_care_per_day);
+            const level = Math.max(1, Number(garden && garden.level) || 1);
+            return Math.min(6, Math.max(2, 1 + level));
+        }
+        let MAX_CARE_PER_DAY = 3;
         function syncFarmToolButtons(garden) {
+            MAX_CARE_PER_DAY = _carePerDayFromGarden(garden);
             const waterBtn = document.querySelector('.farm-tool-btn[onclick*="waterAllPlots"]');
             const sunBtn = document.querySelector('.farm-tool-btn[onclick*="sunlightAllPlots"]');
             const waterUsed = garden && garden.care_actions && Number(garden.care_actions.water) || 0;
