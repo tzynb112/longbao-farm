@@ -1507,7 +1507,11 @@ const ray = document.createElement('div');
         }
 
         async function handleDailyTask() {
+            // 侧栏也能直接领取任务；先打开农场，确保加载状态和错误信息可见。
+            const farm = document.getElementById('farmFullscreen');
+            if (!farm.classList.contains('active')) openFarm();
             const bubble = document.getElementById('farmBubble');
+            bubble.innerHTML = '🎯 正在领取今日任务，请稍等一下…';
             try {
                 const response = await fetch(apiUrl('/api/daily-task') + '?user_name=' + encodeURIComponent(childName || ''));
                 const result = await response.json();
@@ -1528,7 +1532,7 @@ const ray = document.createElement('div');
                 renderFarmPlots(reward.garden);
                 bubble.innerHTML = `🎊 ${reward.message}`;
             } catch (error) {
-                bubble.innerHTML = '😿 今日任务暂时加载不了，请稍后再试。';
+                bubble.innerHTML = '😿 今日任务暂时加载不了。<br>请确认扣子后端已重新发布后再试。';
             }
         }
 
