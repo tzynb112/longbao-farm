@@ -1669,9 +1669,8 @@ const ray = document.createElement('div');
             const ghostBtn = modal.querySelector('.task-modal-btn.ghost');
             const btnRow = document.getElementById('taskModalBtnRow');
 
-            // 恢复 modal UI 到默认状态
-            box.style.cssText = '';
-            titleEl.style.cssText = ''; descEl.style.cssText = '';
+            // 恢复 modal UI 到默认状态（清除之前 confirmTaskAction 可能留下的庆祝 inline style）
+            box.style.cssText = ''; titleEl.style.cssText = ''; descEl.style.cssText = '';
             rewardEl.style.display = ''; btnRow.style.display = '';
             ghostBtn.style.display = ''; acceptBtn.style.display = '';
             titleEl.innerText = '龙宝正在准备今日任务…';
@@ -1680,17 +1679,26 @@ const ray = document.createElement('div');
             acceptBtn.disabled = true;
             acceptBtn.innerText = '准备中… ⏳';
             modal.classList.add('active');
-            bubble.innerHTML = '🎯 正在向龙宝领取今日幸福小任务…';
 
+            // ————— 注意：modal 在此之后绝不再被 handleDailyTask 主动关闭 —————
+            //      用户只能点 "等一下" 按钮手动关；如果 API 失败则 modal 显示错误文本
+            //      任务已完成时 modal 内显示 "已完成" 文案，也不自动关闭
+
+            console.log('[handleDailyTask] modal opened, fetching daily-task…');
             try {
                 const result = await postGardenAction('daily-task');
-                if (!result.task) throw new Error('任务暂时加载不了');
+                console.log('[handleDailyTask] API response:', result);
+                if (!result || !result.task) throw new Error('任务暂时加载不了');
                 if (result.completed) {
-                    closeTaskModal();
-                    bubble.innerHTML = '🎉 今日品格任务已经完成啦！<br>明天再来领取新的成长挑战！';
+                    // 已完成：在 modal 内显示 "已完成" 信息，用户点 "等一下" 关掉
+                    titleEl.innerText = '🎉 今天的任务已经完成啦！';
+                    descEl.innerText = '明天再来领取新的成长挑战吧 🌱';
+                    rewardEl.style.display = 'none';
+                    acceptBtn.style.display = 'none';
+                    ghostBtn.innerText = '我知道了 ✨';
                     return;
                 }
-                // 填充任务描述，启用完成按钮
+                // 正常填充任务
                 titleEl.innerText = '🎯 龙宝今日任务';
                 descEl.innerText = result.task.description || '今天的亲子幸福小任务';
                 rewardEl.innerText = '完成可获 🌟×5 品格星星 + 一颗 ' + (result.task.trait || '品格') + ' 种子 🌱';
@@ -1699,8 +1707,9 @@ const ray = document.createElement('div');
                 window._pendingTask = result;
                 if (result.garden) updateGardenUI(result.garden);
             } catch (error) {
-                titleEl.innerText = '😿 任务暂时拉不下来';
-                descEl.innerText = '请确认扣子后端已重新发布后再试。';
+                console.error('[handleDailyTask] error:', error);
+                titleEl.innerText = '😿 暂时拿不到任务';
+                descEl.innerText = error.message || '请检查网络或扣子后端是否已发布。';
                 rewardEl.style.display = 'none';
                 acceptBtn.disabled = true;
                 acceptBtn.innerText = '稍后重试';
@@ -1722,28 +1731,26 @@ const ray = document.createElement('div');
             try {
                 const reward = await postGardenAction('complete-daily-task');
                 if (!reward.garden) throw new Error(reward.error || '奖励领取失败');
-                // 奖励成功 → 播放庆祝动画
+                // 奖励成功 → 庆祝画面
                 box.style.background = 'linear-gradient(135deg, #fef9c3 0%, #dbeafe 50%, #fce7f3 100%)';
-                titleEl.style.fontSize = '20px';
+                titleEl.style.fontSize = '22px';
                 titleEl.innerText = '🎉🎉 任务完成！太棒啦！🎉🎉';
-                descEl.innerHTML = '🌟 恭喜完成亲子幸福小任务！<br>🌱 已播种 <strong>' + (reward.seed ? reward.seed.flower || pending.task.trait : pending.task.trait) + '</strong><br>⭐ 品格能量 +10  🌟 品格星星 +5';
+                descEl.innerHTML = '🌟 恭喜完成亲子幸福小任务！<br>🌱 已播种 <strong>' + (reward.seed ? (reward.seed.flower || pending.task.trait) : pending.task.trait) + '</strong><br>⭐ 品格能量 +10  🌟 品格星星 +5';
                 rewardEl.innerText = '龙宝送你的品格种子已经种下啦 🌱✨';
                 btnRow.style.display = 'none';
                 ghostBtn.style.display = 'none';
-
                 updateGardenUI(reward.garden);
                 renderFarmPlots(reward.garden);
-
-                // 2 秒后自动关闭 modal
                 setTimeout(() => {
                     closeTaskModal();
                     box.style.cssText = '';
                     bubble.innerHTML = '🎉 ' + (reward.message || '任务完成啦！去看看农场里种的品格小花吧 🌸');
-                }, 2500);
+                }, 2800);
             } catch (error) {
+                console.error('[confirmTaskAction] error:', error);
                 btn.disabled = false;
                 btn.innerText = '重试 🎯';
-                document.getElementById('taskModalTitle').innerText = '😿 领取失败了，再试一次？';
+                titleEl.innerText = '😿 领取失败了，再试一次？';
             }
             window._pendingTask = null;
         }
