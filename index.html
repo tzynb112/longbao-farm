@@ -1261,15 +1261,7 @@ const ray = document.createElement('div');
         ];
 
         function requestDailyTaskFromLongbao() {
-            postGardenAction('daily-task', { user_name: childName || '' }).then(data => {
-                if (data.task) {
-                    appendMessage('assistant', `🎯 今日亲子幸福小任务：\n\n${data.task.description}\n\n完成后告诉龙宝，龙宝给你颁奖章！✨`);
-                    if (data.garden) updateGardenUI(data.garden);
-                }
-            }).catch(e => {
-                appendMessage('assistant', '龙宝暂时拿不到任务～先聊聊天吧！');
-                console.error(e);
-            });
+            sendQuickMessage('龙宝，给我布置一个今天的新任务吧！');
         }
 
         /* ===== 2.5D 农场 ===== */
