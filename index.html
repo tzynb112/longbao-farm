@@ -999,7 +999,7 @@
             ? { ...headers, Authorization: `Bearer ${COZE_API_CONFIG.token}` }
             : headers;
         const resolveApiAssetUrl = (assetUrl) => {
-            if (!assetUrl || /^https?:\/\//i.test(assetUrl)) return assetUrl;
+            if (!assetUrl || /^(https?:|data:|blob:)/i.test(assetUrl)) return assetUrl;
             return new URL(assetUrl, API_BASE_URL).toString();
         };
         let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'warm_female';
@@ -1237,7 +1237,33 @@
 
         function renderSeedInventory() {
             const grid = document.getElementById('seedInventoryGrid');
-            grid.innerHTML = SEED_INVENTORY_ITEMS.map(item => {
+
+            // 只展示孩子通过好品格行为已经解锁的种子（从花园数据推导），初始为空
+            const unlockedEmojis = new Set();
+            if (currentGardenData && currentGardenData.seeds) {
+                currentGardenData.seeds.forEach(s => {
+                    const f = (s.flower || s.trait || '').trim();
+                    const emoji = f.split(' ')[0];
+                    if (emoji) unlockedEmojis.add(emoji);
+                });
+            }
+            const available = SEED_INVENTORY_ITEMS.filter(item => {
+                const emoji = (item.flower || '').trim().split(' ')[0];
+                return emoji && unlockedEmojis.has(emoji);
+            });
+
+            if (available.length === 0) {
+                grid.innerHTML = `
+                <div style="grid-column:1/-1; text-align:center; padding:36px 18px; color:#b45309;">
+                    <div style="font-size:46px; margin-bottom:12px;">🌱</div>
+                    <div style="font-size:16px; font-weight:900; margin-bottom:8px;">种子仓库空空的呢</div>
+                    <div style="font-size:13px; line-height:1.7; color:#92400e;">快去和龙宝聊天，做出诚实、勇敢、分享等好品格行为，<br>就能解锁对应的品格种子，再回来播种啦！✨</div>
+                    <button class="seed-talk-btn" style="margin-top:16px;" onclick="closeSeedInventory(); closeFarm(); sendQuickMessage('龙宝，我想解锁一颗品格种子！')">💬 去找龙宝解锁种子</button>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = available.map(item => {
                 const profile = getFlowerProfile(item.flower);
                 return `
                 <div class="seed-item-card" onclick="selectAndPlantSeed('${item.flower}', '${item.trait}')" role="button" tabindex="0">
