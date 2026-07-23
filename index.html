@@ -857,7 +857,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
     <div id="welcomeOverlay" class="welcome-overlay">
         <div class="welcome-card">
             <div class="welcome-avatar">
-                <img src="/static/longbao.jpg" alt="龙宝">
+                <img src="./longbao.jpg" alt="龙宝">
             </div>
             <div class="welcome-title">你好呀小朋友！👋</div>
             <div class="welcome-desc">我是龙宝~<br>你能告诉我你叫什么名字吗？</div>
@@ -963,7 +963,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
 
             <!-- 龙宝 -->
             <div class="farm-mascot">
-                <img src="/static/longbao.jpg" alt="龙宝" class="farm-mascot-img">
+                <img src="./longbao.jpg" alt="龙宝" class="farm-mascot-img">
                 <div class="farm-mascot-speech" id="farmBubble">
                     欢迎来到龙宝农场！🌾<br>点击空地块选种子，点击花朵看对应成就！
                 </div>
@@ -1013,7 +1013,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
         <div class="header-bar">
             <div class="header-brand">
                 <div class="avatar-frame">
-                    <img src="/static/longbao.jpg" alt="蓝龙龙宝" class="avatar-img">
+                    <img src="./longbao.jpg" alt="蓝龙龙宝" class="avatar-img">
                     <div class="avatar-badge">龙宝</div>
                 </div>
                 <div class="brand-titles">
@@ -1070,7 +1070,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
             <div class="chat-container">
                 <div class="chat-messages" id="chatMessages">
                     <div class="message-row assistant">
-                        <div class="msg-avatar-box"><img src="/static/longbao.jpg" alt="龙宝"></div>
+                            <div class="msg-avatar-box"><img src="./longbao.jpg" alt="龙宝"></div>
                         <div class="msg-bubble">
                             幸福种子，品格发芽——龙宝来啦！🦕✨<br>
                             我是龙宝，一只来自自贡恐龙之乡的小恐龙！今天我们一起种一颗品格种子好不好呀？
@@ -1115,7 +1115,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
         const apiUrl = (path) => API_BASE_URL ? `${API_BASE_URL.replace(/\/$/, '')}${path}` : path;
         const resolveAudioUrl = (url) => {
             if (!url) return url;
-            if (/^(https?:|data:|blob:)/i.test(url)) return url;
+            if (/^(https?:|data:|blob:|\.\/)/i.test(url)) return url;
             if (API_BASE_URL) return `${API_BASE_URL.replace(/\/$/, '')}${url}`;
             return url;
         };
@@ -1655,7 +1655,7 @@ const ray = document.createElement('div');
             }, 3000);
         }
 
-        function playWelcomeVoice() { playNeuralAudio(resolveAudioUrl('/static/audio/welcome.mp3'), 'welcome_btn'); }
+        function playWelcomeVoice() { playNeuralAudio('./audio/welcome.mp3', 'welcome_btn'); }
 
         async function fetchGardenData() {
             try {
@@ -1743,7 +1743,7 @@ const ray = document.createElement('div');
             const avatarBox = document.createElement('div');
             avatarBox.className = `msg-avatar-box ${role === 'user' ? 'user-avatar' : ''}`;
             if (role === 'user') avatarBox.innerText = '👧';
-            else avatarBox.innerHTML = `<img src="/static/longbao.jpg" alt="龙宝">`;
+            else avatarBox.innerHTML = `<img src="./longbao.jpg" alt="龙宝">`;
 
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'msg-bubble';
@@ -1820,7 +1820,7 @@ currentPlayingAudio = audio;
         function appendLoadingMessage() {
             const m = document.createElement('div');
             m.className = 'message-row assistant';
-            m.innerHTML = `<div class="msg-avatar-box"><img src="/static/longbao.jpg" alt="龙宝"></div>
+            m.innerHTML = `<div class="msg-avatar-box"><img src="./longbao.jpg" alt="龙宝"></div>
                 <div class="msg-bubble" style="color:#64748b;">龙宝思考中 💭...</div>`;
             chatMessages.appendChild(m); chatMessages.scrollTop = chatMessages.scrollHeight;
             return m;
@@ -1996,5 +1996,4 @@ currentPlayingAudio = audio;
     </script>
 </body>
 </html>
-
 
