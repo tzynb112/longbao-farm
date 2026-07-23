@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -771,6 +771,56 @@
             .seed-card-achievement, .seed-card-desc { font-size: 10px; }
             .seed-price-badge { font-size: 10px; padding: 3px 6px; }
         }
+        /* ========== 欢迎弹窗：询问小朋友名字 ========== */
+        .welcome-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2,132,199,0.55); backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .welcome-overlay.active { opacity: 1; pointer-events: auto; }
+        .welcome-card {
+            background: #fff; border-radius: 32px; padding: 36px 32px;
+            max-width: 420px; width: 90%; text-align: center;
+            border: 4px solid #38bdf8; box-shadow: 0 24px 60px rgba(2,132,199,0.35);
+            transform: scale(0.85); transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        .welcome-overlay.active .welcome-card { transform: scale(1); }
+        .welcome-avatar { width: 90px; height: 90px; border-radius: 50%; border: 4px solid #38bdf8;
+            background: #e0f2fe; margin: 0 auto 14px; overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12); animation: avatarWiggle 3.5s infinite ease-in-out;
+        }
+        .welcome-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .welcome-title { font-size: 22px; font-weight: 800; color: #0284c7; margin-bottom: 8px; }
+        .welcome-desc { font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 20px; }
+        .welcome-input-wrap { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; }
+        .welcome-input {
+            flex: 1; padding: 14px 20px; border: 3px solid #bae6fd; border-radius: 50px;
+            font-size: 16px; font-weight: 700; outline: none; color: #1e293b; background: #f0f9ff;
+        }
+        .welcome-input:focus { border-color: #38bdf8; background: #fff; box-shadow: 0 0 0 5px rgba(56,189,248,0.2); }
+        .welcome-mic {
+            width: 48px; height: 48px; border-radius: 50%; border: 3px solid #cbd5e1;
+            background: #fff; cursor: pointer; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; transition: all 0.25s ease;
+        }
+        .welcome-mic:hover { border-color: #38bdf8; transform: scale(1.08); }
+        .welcome-mic.recording { border-color: #ef4444; background: #fef2f2; animation: micPulse 1s ease-in-out infinite; }
+        .welcome-submit {
+            background: linear-gradient(135deg, #ff7043, #fbbf24); color: white; border: none;
+            padding: 14px 36px; border-radius: 50px; font-size: 17px; font-weight: 800;
+            cursor: pointer; box-shadow: 0 8px 20px rgba(255,112,67,0.35); transition: all 0.25s ease;
+        }
+        .welcome-submit:hover { transform: translateY(-2px) scale(1.03); }
+        .welcome-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .child-name-tag {
+            position: absolute; top: 14px; right: 18px; z-index: 10;
+            background: rgba(255,255,255,0.9); border: 2px solid #bae6fd;
+            padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 700;
+            color: #0284c7; cursor: pointer; backdrop-filter: blur(10px);
+        }
+        .child-name-tag:hover { background: #fff; border-color: #38bdf8; }
     </style>
 </head>
 <body>
@@ -1370,7 +1420,7 @@
                 fetch(apiUrl('/api/chat'), {
                     method: 'POST',
                     headers: apiHeaders({ 'Content-Type': 'application/json' }),
-                    body: JSON.stringify({ message: `龙宝，我刚刚在农场里成功播种了【${flowerName}】！`, session_id: sessionId })
+                    body: JSON.stringify({ message: `龙宝，我刚刚在农场里成功播种了【${flowerName}】！`, session_id: sessionId, user_name: childName })
                 }).then(res => res.json()).then(data => {
                     if (data.garden) updateGardenUI(data.garden);
                 });
@@ -1535,7 +1585,7 @@
 
         async function fetchGardenData() {
             try {
-                const res = await fetch(apiUrl('/api/garden'), { headers: apiHeaders() });
+                const res = await fetch(apiUrl('/api/garden') + '?user_name=' + encodeURIComponent(childName), { headers: apiHeaders() });
                 if (res.ok) { const data = await res.json(); updateGardenUI(data); }
             } catch (e) { console.error("加载花园数据失败", e); }
         }
@@ -1600,7 +1650,7 @@
             try {
                 const response = await fetch(apiUrl('/api/chat'), {
                     method: 'POST', headers: apiHeaders({ 'Content-Type': 'application/json' }),
-                    body: JSON.stringify({ message, session_id: sessionId, voice_id: selectedVoiceId })
+                    body: JSON.stringify({ message, session_id: sessionId, voice_id: selectedVoiceId, user_name: childName })
                 });
                 const data = await response.json();
                 loadingMsg.remove();
@@ -1759,6 +1809,90 @@
             micBtn.innerText = '🎤';
             messageInput.placeholder = '和龙宝说说话，或者问龙宝讲个故事吧...';
         }
+        /* ========== 首次访问：询问小朋友名字 ========== */
+        let childName = localStorage.getItem('longbaoChildName') || '';
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const welcomeInput = document.getElementById('welcomeInput');
+        const welcomeMicBtn = document.getElementById('welcomeMicBtn');
+        const welcomeSubmit = document.getElementById('welcomeSubmit');
+
+        function showChildNameTag() {
+            let tag = document.getElementById('childNameTag');
+            if (!tag) {
+                tag = document.createElement('div');
+                tag.id = 'childNameTag';
+                tag.className = 'child-name-tag';
+                tag.title = '点击修改名字';
+                tag.onclick = () => {
+                    if (confirm('要换成另一个小朋友吗？')) {
+                        localStorage.removeItem('longbaoChildName');
+                        location.reload();
+                    }
+                };
+                document.querySelector('.header-bar').appendChild(tag);
+            }
+            tag.innerText = '👋 ' + childName;
+        }
+
+        function closeWelcome() {
+            welcomeOverlay.classList.remove('active');
+            showChildNameTag();
+            fetchGardenData();
+        }
+
+        function saveNameAndProceed(name) {
+            name = name.trim();
+            if (!name) {
+                welcomeInput.style.borderColor = '#ef4444';
+                welcomeInput.placeholder = '先告诉我你的名字嘛~';
+                return;
+            }
+            if (name.length > 12) name = name.slice(0, 12);
+            childName = name;
+            localStorage.setItem('longbaoChildName', childName);
+            closeWelcome();
+        }
+
+        if (!childName) {
+            setTimeout(() => {
+                welcomeOverlay.classList.add('active');
+                welcomeInput.focus();
+                playNeuralAudio('./audio/welcome.mp3', 'welcome_modal_btn');
+            }, 600);
+        } else {
+            showChildNameTag();
+        }
+
+        welcomeSubmit.addEventListener('click', () => saveNameAndProceed(welcomeInput.value));
+        welcomeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') saveNameAndProceed(welcomeInput.value); });
+
+        let isWelcomeRecording = false;
+        welcomeMicBtn.addEventListener('click', () => {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert('当前浏览器不支持语音输入，请用键盘输入名字哦~');
+                return;
+            }
+            if (isWelcomeRecording) return;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'zh-CN';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.onstart = () => {
+                isWelcomeRecording = true;
+                welcomeMicBtn.classList.add('recording');
+                welcomeMicBtn.innerText = '🔴';
+                welcomeInput.placeholder = '龙宝在听呢，说吧...';
+            };
+            recognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                welcomeInput.value = text;
+                setTimeout(() => saveNameAndProceed(text), 300);
+            };
+            recognition.onerror = () => { isWelcomeRecording = false; welcomeMicBtn.classList.remove('recording'); welcomeMicBtn.innerText = '🎤'; };
+            recognition.onend = () => { isWelcomeRecording = false; welcomeMicBtn.classList.remove('recording'); welcomeMicBtn.innerText = '🎤'; };
+            try { recognition.start(); } catch (e) { isWelcomeRecording = false; }
+        });
     </script>
 </body>
 </html>
