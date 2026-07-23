@@ -20,11 +20,16 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Fredoka', 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+            font-family: 'Noto Sans SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
             background: var(--bg-gradient);
             min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
             padding: 16px; color: #1e293b; overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            letter-spacing: 0.3px;
+            font-optical-sizing: auto;
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(241,245,249,0.6); border-radius: 10px; }
@@ -39,7 +44,7 @@
         .bubble:nth-child(4) { width: 80px; height: 80px; background: #ff7043; left: 85%; animation-duration: 11s; animation-delay: 1s; }
 
         .app-castle {
-            position: relative; z-index: 1; width: 100%; max-width: 1180px; height: 92vh;
+            position: relative; z-index: 1; width: 100%; max-width: 1400px; height: 92vh;
             background: rgba(255,255,255,0.96); backdrop-filter: blur(20px);
             border-radius: 36px; box-shadow: 0 28px 70px rgba(2,132,199,0.18), 0 0 0 6px #fff;
             display: flex; flex-direction: column; overflow: hidden;
@@ -52,16 +57,16 @@
         }
         .header-brand { display: flex; align-items: center; gap: 16px; }
         .avatar-frame {
-            position: relative; width: 68px; height: 68px; border-radius: 50%;
+            position: relative; width: 76px; height: 76px; border-radius: 50%;
             background: #fff; padding: 3px; box-shadow: 0 6px 18px rgba(0,0,0,0.2);
             animation: avatarWiggle 3.5s infinite ease-in-out; flex-shrink: 0;
         }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #e0f2fe; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #e0f2fe; image-rendering: auto; transform: translateZ(0); backface-visibility: hidden; }
         .avatar-badge {
             position: absolute; bottom: -2px; right: -2px; background: #fbbf24; color: #78350f;
             font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 20px; border: 2px solid white;
         }
-        .brand-titles h1 { font-size: 22px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .brand-titles h1 { font-size: 24px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.1); letter-spacing: 0.5px; }
         .brand-titles p {
             font-size: 13px; opacity: 0.95; background: rgba(255,255,255,0.2);
             padding: 2px 10px; border-radius: 12px; display: inline-block; margin-top: 2px;
@@ -128,18 +133,19 @@
         .message-row.user { align-self: flex-end; flex-direction: row-reverse; }
         .message-row.assistant { align-self: flex-start; }
         .msg-avatar-box {
-            width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.12); overflow: hidden;
             background: #fff; border: 2.5px solid #38bdf8;
         }
-        .msg-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .msg-avatar-box img { width: 100%; height: 100%; object-fit: cover; image-rendering: auto; transform: translateZ(0); backface-visibility: hidden; }
         .msg-avatar-box.user-avatar {
             background: #fbbf24; display: flex; align-items: center; justify-content: center;
             font-size: 24px; border-color: #f59e0b;
         }
         .msg-bubble {
-            padding: 16px 22px; border-radius: var(--radius-large); font-size: 16px;
-            line-height: 1.6; box-shadow: 0 6px 20px rgba(0,0,0,0.04); position: relative;
+            padding: 16px 22px; border-radius: var(--radius-large); font-size: 17px;
+            line-height: 1.7; box-shadow: 0 6px 20px rgba(0,0,0,0.04); position: relative;
+            word-break: break-word;
         }
         .message-row.user .msg-bubble {
             background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
@@ -329,9 +335,10 @@
             display: flex; align-items: flex-end; gap: 14px;
         }
         .farm-mascot-img {
-            width: 96px; height: 96px; border-radius: 50%;
+            width: 110px; height: 110px; border-radius: 50%;
             border: 4px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            object-fit: cover; animation: mascotBounce 3s ease-in-out infinite;
+            object-fit: cover; image-rendering: auto; backface-visibility: hidden;
+            animation: mascotBounce 3s ease-in-out infinite;
         }
         .farm-mascot-speech {
             background: white; border: 3px solid #38bdf8; color: #0284c7;
@@ -1572,19 +1579,15 @@
             bubbleDiv.innerHTML = formatMarkdown(cleanText);
 
             if (role === 'assistant') {
-                const btnId = 'speech_btn_' + Math.random().toString(36).substr(2, 7);
-                const voiceBar = document.createElement('div');
-                voiceBar.className = 'voice-play-bar';
                 if (audioUrl) {
+                    const btnId = 'speech_btn_' + Math.random().toString(36).substr(2, 7);
+                    const voiceBar = document.createElement('div');
+                    voiceBar.className = 'voice-play-bar';
                     voiceBar.onclick = () => playNeuralAudio(audioUrl, btnId);
                     voiceBar.innerHTML = `<button id="${btnId}" class="voice-play-btn">▶ 听龙宝说话</button>`;
                     if (isAutoplay) setTimeout(() => playNeuralAudio(audioUrl, btnId), 300);
-                } else {
-                    voiceBar.onclick = () => playBrowserTTS(encodeURIComponent(cleanText), btnId);
-                    voiceBar.innerHTML = `<button id="${btnId}" class="voice-play-btn">▶ 听龙宝说话</button>`;
-                    if (isAutoplay) setTimeout(() => playBrowserTTS(encodeURIComponent(cleanText), btnId), 300);
+                    bubbleDiv.appendChild(voiceBar);
                 }
-                bubbleDiv.appendChild(voiceBar);
 
                 if (cleanText.includes('任务') || cleanText.includes('小管家') || cleanText.includes('一起完成')) {
                     const taskCard = document.createElement('div');
@@ -1632,46 +1635,12 @@
                 audio.onended = () => { btn.innerText = '▶ 听龙宝说话'; btn.removeAttribute('data-playing'); currentPlayingAudio = null; };
                 audio.onerror = () => { btn.innerText = '▶ 听龙宝说话'; btn.removeAttribute('data-playing'); currentPlayingAudio = null; };
             }
-            audio.play().catch(e => { console.error("Audio error:", e); playBrowserTTS(encodeURIComponent("你好呀！"), btnId); });
+            audio.play().catch(e => { console.error("Audio playback error:", e); if (btn) { btn.innerText = '▶ 听龙宝说话'; btn.removeAttribute('data-playing'); currentPlayingAudio = null; } });
         }
 
-        function cleanSpeechText(rawText) {
-            if (!rawText) return '';
-            let t = rawText;
-            try { t = decodeURIComponent(t); } catch(e){}
-            t = t.replace(/\[[^\]]+\]\([^\)]+\)/g, '').replace(/\{?https?:\/\/[^\}\s\)]+\}?/g, '')
-                 .replace(/```[\s\S]*?```/g, '').replace(/`([^`]+)`/g, '$1').replace(/#{1,6}\s*/g, '')
-                 .replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1')
-                 .replace(/>\s*/g, '').replace(/-\s*/g, '')
-                 .replace(/[^\u4e00-\u9fff，。！？、；：]/g, ' ').replace(/\s+/g, ' ').trim();
-            return t;
-        }
         function stopSpeech() {
-            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            if (currentPlayingAudio) { currentPlayingAudio.pause(); currentPlayingAudio = null; }
             document.querySelectorAll('.voice-play-btn').forEach(btn => btn.innerText = '▶ 听龙宝说话');
-        }
-        function playBrowserTTS(encodedText, btnId) {
-            if (!('speechSynthesis' in window)) return;
-            const plainText = cleanSpeechText(encodedText);
-            if (!plainText) return;
-            const btn = btnId ? document.getElementById(btnId) : null;
-            if (window.speechSynthesis.speaking) { stopSpeech(); return; }
-            stopSpeech();
-            const utterance = new SpeechSynthesisUtterance(plainText);
-            utterance.lang = 'zh-CN'; utterance.rate = 0.92; utterance.pitch = 1.25;
-            const voices = window.speechSynthesis.getVoices();
-            const voiceNames = selectedVoiceId === 'cute_boy'
-                ? ['Yunxia', 'Yunxi', 'Yunyang', 'Male', '男']
-                : ['Xiaoyi', 'Xiaoxiao', 'Female', '女'];
-            const preferredVoice = voices.find(v => (v.lang.includes('zh') || v.lang.includes('CN')) && voiceNames.some(name => v.name.includes(name)));
-            if (preferredVoice) utterance.voice = preferredVoice;
-            if (selectedVoiceId === 'cute_boy') { utterance.rate = 0.95; utterance.pitch = 1.28; }
-            if (btn) {
-                btn.innerText = '⏸️ 正在朗读 (点击暂停)';
-                utterance.onend = () => { if (btn) btn.innerText = '▶ 听龙宝说话'; };
-                utterance.onerror = () => { if (btn) btn.innerText = '▶ 听龙宝说话'; };
-            }
-            window.speechSynthesis.speak(utterance);
         }
         function appendLoadingMessage() {
             const m = document.createElement('div');
