@@ -53,7 +53,7 @@
             background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
             padding: 14px 28px; color: white;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 6px 24px rgba(2,132,199,0.3);
+            box-shadow: 0 6px 24px rgba(2,132,199,0.3); position: relative;
         }
         .header-brand { display: flex; align-items: center; gap: 16px; }
         .avatar-frame {
@@ -756,6 +756,7 @@
             .farm-stats { gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
             .farm-stat-pill { padding: 6px 8px; font-size: 10px; }
             .farm-close-btn { padding: 7px 9px; font-size: 11px; }
+            .child-name-tag { top: auto; bottom: -28px; right: 8px; font-size: 11px; padding: 2px 8px; }
             .farm-drag-hint { top: 74px; font-size: 10px; }
             .farm-toolbar { width: calc(100% - 20px); bottom: 10px; padding: 8px; }
             .farm-tool-btn { padding: 8px 10px; font-size: 11px; }
@@ -1868,13 +1869,36 @@
             childName = name;
             localStorage.setItem('longbaoChildName', childName);
             closeWelcome();
+
+            // 输入名字后发送一条后台消息，让龙宝用 TTS 生成带名字的自我介绍语音
+            fetch(apiUrl('/api/chat'), {
+                method: 'POST',
+                headers: apiHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({
+                    message: `你好龙宝，我是${childName}，今天第一次来找你玩！`,
+                    session_id: sessionId,
+                    voice_id: selectedVoiceId,
+                    user_name: childName
+                })
+            }).then(res => res.json()).then(data => {
+                if (data.audio_url) {
+                    // 自动播放带名字的欢迎语音
+                    playNeuralAudio(resolveApiAssetUrl(data.audio_url), 'welcome_play_btn');
+                }
+                if (data.text) {
+                    appendMessage('assistant', data.text, resolveApiAssetUrl(data.audio_url));
+                }
+                if (data.garden) updateGardenUI(data.garden);
+            }).catch(() => {
+                // 后台请求失败时静默降级
+                console.warn('Welcome chat fallback');
+            });
         }
 
         if (!childName) {
             setTimeout(() => {
                 welcomeOverlay.classList.add('active');
                 welcomeInput.focus();
-                playNeuralAudio('./audio/welcome.mp3', 'welcome_modal_btn');
             }, 600);
         } else {
             showChildNameTag();
