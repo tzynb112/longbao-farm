@@ -1575,7 +1575,7 @@ const ray = document.createElement('div');
                 updateGardenUI(result.garden);
                 renderFarmPlots(result.garden);
                 bubble.innerHTML = `💦 ${result.message}`;
-                if (result.limited || result.changed === 0) return;
+                if (result.limited) return;
                 plants = document.querySelectorAll('.farm-plot .plot-plant');
             } catch (error) {
                 bubble.innerHTML = '😿 浇水没有成功，请检查网络后再试。';
@@ -1637,7 +1637,7 @@ const ray = document.createElement('div');
                 updateGardenUI(result.garden);
                 renderFarmPlots(result.garden);
                 bubble.innerHTML = `☀️ ${result.message}`;
-                if (result.limited || result.changed === 0) return;
+                if (result.limited) return;
                 plants = document.querySelectorAll('.farm-plot .plot-plant');
             } catch (error) {
                 bubble.innerHTML = '😿 阳光照料没有成功，请检查网络后再试。';
