@@ -332,6 +332,7 @@
             display: flex; align-items: center; justify-content: center; font-size: 26px;
             animation: mascotWiggle 2.5s infinite ease-in-out;
         }
+        .task-modal-mascot img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
         .task-modal-tag {
             display: inline-block; font-size: 12px; font-weight: 800; color: #b45309;
             background: rgba(255,255,255,0.7); padding: 4px 14px; border-radius: 99px;
@@ -889,7 +890,17 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
             .chat-input-box { padding: 8px; gap: 6px; }
             .send-btn-kid { padding: 10px 14px; font-size: 14px; }
             .mic-btn { width: 42px; height: 42px; font-size: 18px; }
-            .feature-sidebar { display: none; }
+            .feature-sidebar {
+                display: flex; flex-direction: row; gap: 8px; overflow-x: auto; overflow-y: hidden;
+                flex: 0 0 82px; padding: 8px 10px; border-top: 1px solid #e0f2fe;
+                background: rgba(248, 252, 255, 0.92); scrollbar-width: none;
+            }
+            .feature-sidebar::-webkit-scrollbar { display: none; }
+            .feature-sidebar h3 { display: none; }
+            .feature-sidebar .magic-card { min-width: 150px; padding: 8px 10px; gap: 8px; }
+            .feature-sidebar .magic-icon { width: 38px; height: 38px; font-size: 24px; border-radius: 12px; }
+            .feature-sidebar .magic-text h4 { font-size: 13px; }
+            .feature-sidebar .magic-text p { font-size: 10px; white-space: nowrap; }
             .farm-header { padding: 12px; align-items: flex-start; }
             .farm-title-text h2 { font-size: 18px; }
             .farm-title-text p { display: none; }
@@ -963,6 +974,39 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
             flex-shrink: 0;
         }
         .child-name-tag:hover { background: #fff; border-color: #38bdf8; }
+        .trait-avatar-active { animation: traitAvatarPop 0.55s ease both, avatarWiggle 3.5s 0.55s infinite ease-in-out; }
+        .character-card {
+            display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 9px;
+            background: linear-gradient(135deg, #eff6ff, #fdf4ff); border: 1.5px solid #bfdbfe;
+            border-radius: 14px; color: #334155;
+        }
+        .character-card img { width: 58px; height: 58px; border-radius: 12px; object-fit: cover; background: #e0f2fe; }
+        .character-card strong { display: block; font-size: 13px; color: #0369a1; }
+        .character-card span { display: block; margin-top: 2px; font-size: 11px; line-height: 1.4; color: #475569; }
+        .quiz-modal-box {
+            width: min(520px, calc(100vw - 32px)); padding: 26px; text-align: center;
+            background: linear-gradient(145deg, #ffffff 0%, #ecfeff 55%, #fef3c7 100%);
+            border: 4px solid #38bdf8; border-radius: 24px; box-shadow: 0 24px 60px rgba(2,132,199,0.28);
+        }
+        .quiz-character { width: 112px; height: 112px; margin: 0 auto 8px; border-radius: 20px; object-fit: cover; border: 3px solid #fbbf24; background: #e0f2fe; }
+        .quiz-level { color: #0369a1; font-size: 13px; font-weight: 900; }
+        .quiz-title { margin: 8px 0 12px; color: #0f4c81; font-size: 23px; font-weight: 900; }
+        .quiz-question { min-height: 88px; padding: 14px; border-radius: 16px; background: rgba(255,255,255,0.9); border: 2px dashed #7dd3fc; color: #1e3a5f; font-size: 18px; font-weight: 800; line-height: 1.65; }
+        .quiz-answer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+        .quiz-answer-btn { min-height: 52px; border: 0; border-radius: 14px; color: white; cursor: pointer; font: inherit; font-size: 18px; font-weight: 900; transition: transform 0.2s ease, opacity 0.2s ease; }
+        .quiz-answer-btn:hover { transform: translateY(-2px); }
+        .quiz-answer-btn.yes { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .quiz-answer-btn.no { background: linear-gradient(135deg, #fb7185, #e11d48); }
+        .quiz-answer-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+        .quiz-voice-btn { width: 100%; margin-top: 10px; padding: 11px; border-radius: 14px; border: 2px solid #a78bfa; background: #f5f3ff; color: #6d28d9; cursor: pointer; font: inherit; font-weight: 900; }
+        .quiz-feedback { min-height: 24px; margin: 12px 0 2px; color: #475569; font-size: 14px; font-weight: 800; line-height: 1.5; }
+        .quiz-close { margin-top: 10px; border: 0; background: transparent; color: #64748b; cursor: pointer; font: inherit; font-weight: 800; }
+        @keyframes traitAvatarPop { 0% { transform: scale(0.72) rotate(-8deg); } 65% { transform: scale(1.12) rotate(4deg); } 100% { transform: scale(1); } }
+        @media (max-width: 720px) {
+            .quiz-modal-box { padding: 20px 16px; }
+            .quiz-title { font-size: 20px; }
+            .quiz-question { font-size: 16px; }
+        }
     </style>
 </head>
 <body>
@@ -999,7 +1043,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
     <!-- 童趣今日任务弹窗 -->
     <div class="modal-overlay" id="taskModal" style="z-index: 100000;">
         <div class="task-modal-box">
-            <div class="task-modal-mascot">🦕</div>
+            <div class="task-modal-mascot" id="taskModalMascot">🦕</div>
             <span class="task-modal-tag">龙宝今日幸福小任务</span>
             <div class="task-modal-title" id="taskModalTitle">龙宝正在准备今天的亲子任务…</div>
             <div class="task-modal-desc-wrap">
@@ -1010,6 +1054,23 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
                 <button class="task-modal-btn ghost" onclick="closeTaskModal()">等一下 🌙</button>
                 <button class="task-modal-btn primary" id="taskModalAcceptBtn" onclick="confirmTaskAction(this)" disabled>接受任务 🎯</button>
             </div>
+        </div>
+    </div>
+
+    <!-- 品格判断题闯关 -->
+    <div class="modal-overlay" id="challengeModal" style="z-index: 100001;">
+        <div class="quiz-modal-box">
+            <img id="challengeCharacterImage" class="quiz-character" src="./longbao.jpg" alt="品格龙宝">
+            <div class="quiz-level" id="challengeLevel">第 1 关 · 共 15 关</div>
+            <div class="quiz-title" id="challengeTitle">品格小勇士闯关</div>
+            <div class="quiz-question" id="challengeQuestion">龙宝正在准备判断题…</div>
+            <div class="quiz-answer-row" id="challengeAnswerRow">
+                <button class="quiz-answer-btn yes" onclick="submitChallengeAnswer('对')">对 ✅</button>
+                <button class="quiz-answer-btn no" onclick="submitChallengeAnswer('不对')">不对 ❌</button>
+            </div>
+            <button class="quiz-voice-btn" id="challengeVoiceBtn" onclick="startChallengeVoiceInput()">🎤 用小声音回答“对”或“不对”</button>
+            <div class="quiz-feedback" id="challengeFeedback"></div>
+            <button class="quiz-close" onclick="closeChallengeModal()">先休息一下</button>
         </div>
     </div>
 
@@ -1145,8 +1206,8 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
         <div class="header-bar">
             <div class="header-brand">
                 <div class="avatar-frame">
-                    <img src="./longbao.jpg" alt="蓝龙龙宝" class="avatar-img">
-                    <div class="avatar-badge">龙宝</div>
+                    <img id="mainAvatar" src="./longbao.jpg" alt="蓝龙龙宝" class="avatar-img">
+                    <div id="avatarBadge" class="avatar-badge">龙宝</div>
                 </div>
                 <div class="brand-titles">
                     <h1>龙宝品格小管家 🦕</h1>
@@ -1202,7 +1263,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
             <div class="chat-container">
                 <div class="chat-messages" id="chatMessages">
                     <div class="message-row assistant">
-                            <div class="msg-avatar-box"><img src="./longbao.jpg" alt="龙宝"></div>
+                            <div class="msg-avatar-box"><img id="initialChatAvatar" src="./longbao.jpg" alt="龙宝"></div>
                         <div class="msg-bubble">
                             幸福种子，品格发芽——龙宝来啦！🦕✨<br>
                             我是龙宝，一只来自自贡恐龙之乡的小恐龙！今天我们一起种一颗品格种子好不好呀？
@@ -1233,6 +1294,10 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
                     <div class="magic-icon">🎯</div>
                     <div class="magic-text"><h4>幸福小管家</h4><p>领取亲子任务</p></div>
                 </div>
+                <div class="magic-card" onclick="openCharacterChallenge()">
+                    <div class="magic-icon">🧩</div>
+                    <div class="magic-text"><h4>品格闯关赛</h4><p>用“对、不对”赢种子</p></div>
+                </div>
                 <div class="magic-card" onclick="sendQuickMessage('念一首快乐的儿歌')">
                     <div class="magic-icon">🎵</div>
                     <div class="magic-text"><h4>快乐儿歌</h4><p>和龙宝一起唱</p></div>
@@ -1256,7 +1321,7 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
             const response = await fetch(apiUrl('/api/chat'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ garden_action: gardenAction, user_name: childName || '', ...payload })
+                body: JSON.stringify({ garden_action: gardenAction, user_name: childName || '', voice_id: selectedVoiceId, ...payload })
             });
             const result = await response.json();
             if (!response.ok || result.error) throw new Error(result.error || '农场暂时无法处理这个动作');
@@ -1268,10 +1333,62 @@ background: radial-gradient(circle at 85% 15%, rgba(255,235,59,0.45) 0%, rgba(25
         let isAutoplay = true;
         let currentGardenData = null;
         let selectedVoiceId = localStorage.getItem('longbao_voice_id') || 'cute_boy';
+        const DEFAULT_CHARACTER = { trait: '', title: '龙宝', hint: '温暖陪伴每一颗品格种子', image: './longbao.jpg' };
+        const TRAIT_CHARACTERS = {
+            '诚实': { title: '诚实龙宝', hint: '手持水晶球，勇敢说真话', image: './assets/traits/honesty.png' },
+            '勇敢': { title: '勇敢龙宝', hint: '穿上小铠甲，敢试第一步', image: './assets/traits/bravery.png' },
+            '分享': { title: '分享龙宝', hint: '抱着彩虹积木，把快乐分给大家', image: './assets/traits/sharing.png' },
+            '善良': { title: '善良龙宝', hint: '捧着鲜花，把温暖送给朋友', image: './assets/traits/kindness.png' },
+            '感恩': { title: '感恩龙宝', hint: '带着感谢小鸟，记得说谢谢', image: './assets/traits/gratitude.png' },
+            '自律': { title: '自律龙宝', hint: '坐在书桌前，把自己的事做好', image: './assets/traits/self_discipline.png' },
+            '尊重': { title: '尊重龙宝', hint: '向朋友鞠躬，认真倾听', image: './assets/traits/respect.png' },
+            '责任心': { title: '责任心龙宝', hint: '认真浇灌小树，说到做到', image: './assets/traits/responsibility.png' },
+            '关爱': { title: '关爱龙宝', hint: '抱着小熊，把关心送给身边人', image: './assets/traits/care.png' },
+            '勤劳': { title: '勤劳龙宝', hint: '背上工具袋，主动动手帮忙', image: './assets/traits/diligence.png' },
+            '合作': { title: '合作龙宝', hint: '和伙伴拼图，轮流商量', image: './assets/traits/cooperation.png' },
+            '礼貌': { title: '礼貌龙宝', hint: '戴礼帽鞠躬，说请和谢谢', image: './assets/traits/politeness.png' },
+            '自信': { title: '自信龙宝', hint: '站上领奖台，相信我能行', image: './assets/traits/confidence.png' },
+            '坚持': { title: '坚持龙宝', hint: '正在登山，一步一步不放弃', image: './assets/traits/persistence.png' },
+            '友善': { title: '友善龙宝', hint: '和新朋友握手，微笑说你好', image: './assets/traits/friendliness.png' }
+        };
+        let currentCharacter = DEFAULT_CHARACTER;
         const TOTAL_PLOTS = 24;
         const chatMessages = document.getElementById('chatMessages');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
+
+        function getTraitCharacter(trait) {
+            const key = (trait || '').replace('品格', '').trim();
+            return TRAIT_CHARACTERS[key] ? { trait: key, ...TRAIT_CHARACTERS[key] } : DEFAULT_CHARACTER;
+        }
+
+        function applyTraitCharacter(trait) {
+            const character = getTraitCharacter(trait);
+            if (!character.trait) return DEFAULT_CHARACTER;
+            currentCharacter = character;
+            const mainAvatar = document.getElementById('mainAvatar');
+            const initialAvatar = document.getElementById('initialChatAvatar');
+            const badge = document.getElementById('avatarBadge');
+            if (mainAvatar) {
+                mainAvatar.src = character.image;
+                mainAvatar.alt = character.title;
+                mainAvatar.classList.remove('trait-avatar-active');
+                void mainAvatar.offsetWidth;
+                mainAvatar.classList.add('trait-avatar-active');
+            }
+            if (initialAvatar) { initialAvatar.src = character.image; initialAvatar.alt = character.title; }
+            if (badge) badge.innerText = character.trait;
+            return character;
+        }
+
+        function showCharacterCard(container, trait) {
+            const character = getTraitCharacter(trait);
+            if (!character.trait || !container) return;
+            const card = document.createElement('div');
+            card.className = 'character-card';
+            card.innerHTML = `<img src="${character.image}" alt="${character.title}"><div><strong>${character.title}</strong><span>${character.hint}</span></div>`;
+            container.appendChild(card);
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             generateSunRays();
@@ -1393,7 +1510,146 @@ const ray = document.createElement('div');
         ];
 
         function requestDailyTaskFromLongbao() {
-            sendQuickMessage('龙宝，给我布置一个今天的新任务吧！');
+            handleDailyTask();
+        }
+
+        let challengeRecognition = null;
+        let challengeLoading = false;
+
+        function closeChallengeModal() {
+            document.getElementById('challengeModal').classList.remove('active');
+            if (challengeRecognition) {
+                try { challengeRecognition.abort(); } catch (e) { /* 已结束的识别无需处理 */ }
+                challengeRecognition = null;
+            }
+        }
+
+        function setChallengeChoicesDisabled(disabled) {
+            document.querySelectorAll('#challengeAnswerRow .quiz-answer-btn').forEach(btn => { btn.disabled = disabled; });
+            const voiceBtn = document.getElementById('challengeVoiceBtn');
+            if (voiceBtn) voiceBtn.disabled = disabled;
+        }
+
+        function renderChallenge(result) {
+            const image = document.getElementById('challengeCharacterImage');
+            const level = document.getElementById('challengeLevel');
+            const title = document.getElementById('challengeTitle');
+            const question = document.getElementById('challengeQuestion');
+            const feedback = document.getElementById('challengeFeedback');
+            const answerRow = document.getElementById('challengeAnswerRow');
+            const voiceBtn = document.getElementById('challengeVoiceBtn');
+
+            if (result.completed) {
+                image.src = getTraitCharacter('自信').image;
+                level.innerText = `已完成 ${result.total_levels || 15} 关`;
+                title.innerText = '🎉 品格小勇士通关啦！';
+                question.innerText = result.message || '每一种好品格都在你的心里开花啦！';
+                feedback.innerText = '龙宝为你送上全部品格种子的掌声！';
+                answerRow.style.display = 'none';
+                voiceBtn.style.display = 'none';
+                return;
+            }
+
+            const trait = result.active_trait || (result.question && result.question.trait);
+            const character = applyTraitCharacter(trait);
+            image.src = character.image;
+            image.alt = character.title;
+            level.innerText = `第 ${result.level} 关 · 共 ${result.total_levels} 关`;
+            title.innerText = `${character.title}出题啦`;
+            question.innerText = result.question.text;
+            feedback.innerText = character.hint;
+            answerRow.style.display = '';
+            voiceBtn.style.display = '';
+            setChallengeChoicesDisabled(false);
+        }
+
+        async function loadChallengeQuestion() {
+            if (challengeLoading) return;
+            challengeLoading = true;
+            setChallengeChoicesDisabled(true);
+            document.getElementById('challengeFeedback').innerText = '龙宝正在准备下一道题…';
+            try {
+                const result = await postGardenAction('challenge-question');
+                renderChallenge(result);
+                if (result.garden) updateGardenUI(result.garden);
+                if (result.audio_url && isAutoplay) playNeuralAudio(resolveAudioUrl(result.audio_url));
+            } catch (error) {
+                document.getElementById('challengeFeedback').innerText = error.message || '暂时加载不了题目，请稍后再试。';
+                setChallengeChoicesDisabled(false);
+            } finally {
+                challengeLoading = false;
+            }
+        }
+
+        function openCharacterChallenge() {
+            document.getElementById('challengeModal').classList.add('active');
+            document.getElementById('challengeAnswerRow').style.display = '';
+            document.getElementById('challengeVoiceBtn').style.display = '';
+            loadChallengeQuestion();
+        }
+
+        async function submitChallengeAnswer(answer) {
+            if (challengeLoading) return;
+            challengeLoading = true;
+            setChallengeChoicesDisabled(true);
+            const feedback = document.getElementById('challengeFeedback');
+            feedback.innerText = '龙宝认真听着呢…';
+            try {
+                const result = await postGardenAction('challenge-answer', { answer });
+                if (result.active_trait) applyTraitCharacter(result.active_trait);
+                if (result.garden) updateGardenUI(result.garden);
+                feedback.innerText = result.message || (result.correct ? '答对啦！' : '再想一想哦～');
+                if (result.audio_url && isAutoplay) playNeuralAudio(resolveAudioUrl(result.audio_url));
+                if (result.correct) {
+                    const character = getTraitCharacter(result.active_trait);
+                    document.getElementById('challengeCharacterImage').src = character.image;
+                    document.getElementById('challengeTitle').innerText = `🎉 ${character.title}为你鼓掌！`;
+                    setTimeout(() => loadChallengeQuestion(), 1700);
+                } else {
+                    setChallengeChoicesDisabled(false);
+                }
+            } catch (error) {
+                feedback.innerText = error.message || '龙宝没有收到答案，再试一次吧。';
+                setChallengeChoicesDisabled(false);
+            } finally {
+                challengeLoading = false;
+            }
+        }
+
+        function startChallengeVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const feedback = document.getElementById('challengeFeedback');
+            if (!SpeechRecognition) {
+                feedback.innerText = '请用 Chrome 或 Edge 的麦克风回答“对”或“不对”。';
+                return;
+            }
+            if (challengeRecognition) return;
+            challengeRecognition = new SpeechRecognition();
+            challengeRecognition.lang = 'zh-CN';
+            challengeRecognition.continuous = false;
+            challengeRecognition.interimResults = false;
+            challengeRecognition.onstart = () => {
+                feedback.innerText = '🎤 龙宝在听，请说“对”或“不对”…';
+                setChallengeChoicesDisabled(true);
+            };
+            challengeRecognition.onresult = (event) => {
+                const answer = event.results[0][0].transcript;
+                feedback.innerText = `龙宝听到你说“${answer}”`;
+                challengeRecognition = null;
+                submitChallengeAnswer(answer);
+            };
+            challengeRecognition.onerror = () => {
+                feedback.innerText = '龙宝没有听清，可以再说一次或点按钮回答。';
+                challengeRecognition = null;
+                setChallengeChoicesDisabled(false);
+            };
+            challengeRecognition.onend = () => {
+                if (challengeRecognition) {
+                    challengeRecognition = null;
+                    setChallengeChoicesDisabled(false);
+                }
+            };
+            try { challengeRecognition.start(); } catch (error) { challengeRecognition = null; setChallengeChoicesDisabled(false); }
         }
 
         /* ===== 2.5D 农场 ===== */
@@ -1460,7 +1716,12 @@ const ray = document.createElement('div');
             { id: 'polite', name: '🪻 优雅薰衣草种子', trait: '礼貌品格', flower: '🪻 优雅薰衣草', icon: '🪻', desc: '彬彬有礼、文明用语开出的紫罗兰薰衣草！' },
             { id: 'hardwork', name: '🌾 幸运黄金麦种子', trait: '勤劳品格', flower: '🌾 幸运黄金麦', icon: '🌾', desc: '主动做小家务帮大人分担开出的金黄麦穗！' },
             { id: 'cooperate', name: '🍀 幸运四叶草种子', trait: '合作品格', flower: '🍀 幸运四叶草', icon: '🍀', desc: '和小伙伴齐心协力搭积木开出的幸运四叶草！' },
-            { id: 'love', name: '💖 充满爱心花种子', trait: '关爱品格', flower: '💖 充满爱心花', icon: '💖', desc: '懂得关心身边人、拥抱家人的温暖爱心花！' }
+            { id: 'love', name: '💖 充满爱心花种子', trait: '关爱品格', flower: '💖 充满爱心花', icon: '💖', desc: '懂得关心身边人、拥抱家人的温暖爱心花！' },
+            { id: 'respect', name: '🪻 尊重薰衣草种子', trait: '尊重品格', flower: '🪻 优雅薰衣草', icon: '🪻', desc: '认真倾听、礼让他人开出的优雅薰衣草！' },
+            { id: 'responsible', name: '🌼 认真小雏菊种子', trait: '责任心品格', flower: '🌼 认真小雏菊', icon: '🌼', desc: '答应的事情努力做到开出的认真小雏菊！' },
+            { id: 'confident', name: '🌺 灿烂紫罗兰种子', trait: '自信品格', flower: '🌺 灿烂紫罗兰', icon: '🌺', desc: '相信自己、勇敢表达开出的灿烂紫罗兰！' },
+            { id: 'persistent', name: '🌵 坚强仙人球花种子', trait: '坚持品格', flower: '🌵 坚强仙人球花', icon: '🌵', desc: '遇到困难不轻易放弃开出的坚强小花！' },
+            { id: 'friendly', name: '🌼 阳光蒲公英种子', trait: '友善品格', flower: '🌼 阳光蒲公英', icon: '🌼', desc: '主动微笑、友好相处开出的阳光蒲公英！' }
         ];
 
         const FLOWER_PROFILE_DETAILS = {
@@ -1473,7 +1734,11 @@ const ray = document.createElement('div');
             '🪻 优雅薰衣草': { price: 11, achievement: '礼貌成就：会使用礼貌用语', detail: '会主动打招呼，并记得说请、谢谢和对不起。', highlight: '礼貌地和别人相处，薰衣草会散发出好闻的香气。' },
             '🌾 幸运黄金麦': { price: 12, achievement: '勤劳成就：主动帮忙做事情', detail: '愿意自己动手，也愿意为家人分担力所能及的小家务。', highlight: '主动摆碗筷、收拾桌面或整理房间，黄金麦会长得更饱满。' },
             '🍀 幸运四叶草': { price: 12, achievement: '合作成就：和伙伴一起完成任务', detail: '愿意倾听、轮流和配合，让大家一起把事情做好。', highlight: '和伙伴一起搭积木、收玩具或解决问题，四叶草会带来好运。' },
-            '💖 充满爱心花': { price: 13, achievement: '关爱成就：把温暖传给身边人', detail: '会照顾家人和伙伴，也愿意用拥抱和陪伴表达爱。', highlight: '关心别人今天开不开心，爱心花就会闪闪发光。' }
+            '💖 充满爱心花': { price: 13, achievement: '关爱成就：把温暖传给身边人', detail: '会照顾家人和伙伴，也愿意用拥抱和陪伴表达爱。', highlight: '关心别人今天开不开心，爱心花就会闪闪发光。' },
+            '🌼 认真小雏菊': { price: 12, achievement: '责任心成就：答应的事努力做到', detail: '会记得自己的小任务，并认真完成。', highlight: '主动完成答应的小事，小雏菊会开得整整齐齐。' },
+            '🌺 灿烂紫罗兰': { price: 13, achievement: '自信成就：相信自己能做到', detail: '愿意表达想法，也愿意勇敢尝试。', highlight: '对自己说“我能行”时，紫罗兰会亮起来。' },
+            '🌵 坚强仙人球花': { price: 14, achievement: '坚持成就：遇到困难不放弃', detail: '愿意换个方法再试一次，慢慢把事情完成。', highlight: '每一次继续努力，都会让坚强小花更有力量。' },
+            '🌼 阳光蒲公英': { price: 13, achievement: '友善成就：主动微笑交朋友', detail: '会友好打招呼，也愿意邀请别人一起玩。', highlight: '一个温暖的微笑，会让蒲公英飞得更远。' }
         };
 
         const FLOWER_PROFILE_MAP = {};
@@ -1590,6 +1855,7 @@ const ray = document.createElement('div');
             const bubble = document.getElementById('farmBubble');
             try {
                 const result = await postGardenAction('plant', { trait: traitName.replace('品格', '') });
+                applyTraitCharacter(result.active_trait || traitName.replace('品格', ''));
                 updateGardenUI(result.garden);
                 renderFarmPlots(result.garden);
                 bubble.innerHTML = `🎉 ${result.message}<br>获得 1 点成长值与 1 颗品格星星！`;
@@ -1689,6 +1955,9 @@ const ray = document.createElement('div');
                 const result = await postGardenAction('daily-task');
                 console.log('[handleDailyTask] API response:', result);
                 if (!result || !result.task) throw new Error('任务暂时加载不了');
+                const taskCharacter = applyTraitCharacter(result.active_trait || result.task.trait);
+                document.getElementById('taskModalMascot').innerHTML = `<img src="${taskCharacter.image}" alt="${taskCharacter.title}">`;
+                if (result.audio_url && isAutoplay) playNeuralAudio(resolveAudioUrl(result.audio_url));
                 if (result.completed) {
                     // 已完成：在 modal 内显示 "已完成" 信息，用户点 "等一下" 关掉
                     titleEl.innerText = '🎉 今天的任务已经完成啦！';
@@ -1731,6 +2000,9 @@ const ray = document.createElement('div');
             try {
                 const reward = await postGardenAction('complete-daily-task');
                 if (!reward.garden) throw new Error(reward.error || '奖励领取失败');
+                const rewardCharacter = applyTraitCharacter(reward.active_trait || (reward.seed && reward.seed.trait) || pending.task.trait);
+                document.getElementById('taskModalMascot').innerHTML = `<img src="${rewardCharacter.image}" alt="${rewardCharacter.title}">`;
+                if (reward.audio_url && isAutoplay) playNeuralAudio(resolveAudioUrl(reward.audio_url));
                 // 奖励成功 → 庆祝画面
                 box.style.background = 'linear-gradient(135deg, #fef9c3 0%, #dbeafe 50%, #fce7f3 100%)';
                 titleEl.style.fontSize = '22px';
@@ -2050,18 +2322,26 @@ const ray = document.createElement('div');
                 const data = await response.json();
                 loadingMsg.remove();
                 if (!response.ok || data.error) { appendMessage('assistant', data.message || '龙宝暂时没连上智慧服务，请检查 API 配置后再试。'); }
-                else { sessionId = data.session_id; appendMessage('assistant', data.text, data.audio_url); if (data.garden) updateGardenUI(data.garden); }
+                else {
+                    sessionId = data.session_id;
+                    if (data.active_trait) applyTraitCharacter(data.active_trait);
+                    appendMessage('assistant', data.text, data.audio_url, data.active_trait);
+                    if (data.garden) updateGardenUI(data.garden);
+                }
             } catch (error) { loadingMsg.remove(); appendMessage('assistant', '哎呀，网络好像出了一点小问题，请稍后再试~'); }
             messageInput.disabled = false; sendBtn.disabled = false; messageInput.focus();
         }
 
-        function appendMessage(role, text, audioUrl = null) {
+        function appendMessage(role, text, audioUrl = null, trait = null) {
             const msgRow = document.createElement('div');
             msgRow.className = `message-row ${role}`;
             const avatarBox = document.createElement('div');
             avatarBox.className = `msg-avatar-box ${role === 'user' ? 'user-avatar' : ''}`;
             if (role === 'user') avatarBox.innerText = '👧';
-            else avatarBox.innerHTML = `<img src="./longbao.jpg" alt="龙宝">`;
+            else {
+                const character = getTraitCharacter(trait || currentCharacter.trait);
+                avatarBox.innerHTML = `<img src="${character.image}" alt="${character.title}">`;
+            }
 
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = 'msg-bubble';
@@ -2070,6 +2350,7 @@ const ray = document.createElement('div');
             bubbleDiv.innerHTML = formatMarkdown(cleanText);
 
             if (role === 'assistant') {
+                if (trait) showCharacterCard(bubbleDiv, trait);
                 const resolvedAudioUrl = resolveAudioUrl(audioUrl);
                 if (resolvedAudioUrl) {
                     const btnId = 'speech_btn_' + Math.random().toString(36).substr(2, 7);
@@ -2268,7 +2549,8 @@ currentPlayingAudio = audio;
                     playNeuralAudio(resolveAudioUrl(data.audio_url), 'welcome_play_btn');
                 }
                 if (data.text) {
-                    appendMessage('assistant', data.text, resolveAudioUrl(data.audio_url));
+                    if (data.active_trait) applyTraitCharacter(data.active_trait);
+                    appendMessage('assistant', data.text, resolveAudioUrl(data.audio_url), data.active_trait);
                 }
                 if (data.garden) updateGardenUI(data.garden);
             }).catch(() => {
